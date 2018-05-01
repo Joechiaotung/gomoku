@@ -22,15 +22,13 @@ var (
 var V float64
 
 // Type of the unit of the labyrinth
-type Block int
+type Stone int
 
-// Block types of the labyrinth
+// Pieces
 const (
-	// Empty block (free passage)
-	BlockEmpty Block = iota
-
-	// Wall block
-	BlockWall
+	StoneEmpty Stone = iota
+	StoneWhite
+	StoneBlack
 )
 
 type Dir int

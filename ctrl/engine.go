@@ -93,7 +93,18 @@ func handleClick(c model.Click) {
 	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
 	fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
 	// model.Lab[col][row] = model.BlockWall
-	model.Lab[row][col] = model.BlockWall
+
+
+
+
+	if model.PlayerTurn == true {
+		model.Lab[row][col] = model.StoneWhite
+	} else {
+		model.Lab[row][col] = model.StoneBlack
+	}
+	model.PlayerTurn = !model.PlayerTurn
+
+
 	// model.Lab[10][10] = model.BlockWall
 	// model.Lab[2][2] := model.BlockWall
 	// model.Lab[20][20] := model.BlockWall
