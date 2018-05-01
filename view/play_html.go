@@ -54,22 +54,33 @@ const play_html = `<html>
 	// HTML elements:
 	var img            = document.getElementById("img"),
 		errMsg         = document.getElementById("errMsg"),
-		quality        = document.getElementById("quality"),
-		fps            = document.getElementById("fps"),
 		pauseResumeBtn = document.getElementById("pauseResume");
 	
 	// Disable image dragging and right-click context menu:
 	img.oncontextmenu = img.ondragstart = function() { return false; }
 	
 	pauseResume();
+	refresh();
 	
 	// Kick-off:
+	console.log("Kick off...");
 	setInterval(checkRunId, 10000);
 	
 	function pauseResume() {
 		playing = !playing;
 		imgLoaded = true;
-		pauseResumeBtn.innerText = playing ? "Freeze" : "Resume";
+		// pauseResumeBtn.innerText = playing ? "Freeze" : "Resume";
+	}
+
+
+	function refresh() {
+		if (playing && imgLoaded) {
+			imgLoaded = false;
+			img.src = "/img?quality=75&t=" + new Date().getTime();
+			setTimeout(refresh, 5);
+		}
+		else
+			setTimeout(refresh, 5);
 	}
 	
 	
@@ -96,6 +107,7 @@ const play_html = `<html>
 	}
 	
 	function checkRunId() {
+		console.log("checking run id...");
 		if (!playing)
 			return;
 		var r = new XMLHttpRequest();

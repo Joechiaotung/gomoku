@@ -8,18 +8,21 @@ import (
 	"net/http"
 	"os/exec"
 	"runtime"
+	"github.com/skiptomyliu/gomoku/ctrl"
+	"github.com/skiptomyliu/gomoku/model"
 	"github.com/skiptomyliu/gomoku/view"
-
 )
 
-
 var port int
-
 
 func processFlags() error {
 	// General flags
 	flag.IntVar(&port, "port", 1234, "Port to start the UI web server on; valid range: 0..65535")
 	// flag.BoolVar(&autoOpen, "autoOpen", true, "Auto-opens the UI web page in the default browser")
+
+	flag.IntVar(&model.Rows, "rows", 33, "the number of rows in the Labyrinth; must be odd; valid range: 9..99")
+	flag.IntVar(&model.Cols, "cols", 33, "the number of columns in the Labyrinth; must be odd; valid range: 9..99")
+
 
 	// View package flags
 	flag.IntVar(&view.ViewWidth, "viewWidth", 700, "width of the view image in pixels in the UI web page; valid range: 150..2000")
@@ -30,6 +33,10 @@ func processFlags() error {
 	if port < 0 || port > 65535 {
 		return fmt.Errorf("port %d is outside of valid range", port)
 	}
+
+	model.LabWidth = model.Cols * model.BlockSize
+	model.LabHeight = model.Rows * model.BlockSize
+
 
 	if view.ViewWidth < 150 || view.ViewWidth > 2000 {
 		return fmt.Errorf("viewWidth %d is outside of valid range", view.ViewWidth)
@@ -50,9 +57,9 @@ func main() {
 		return
 	}
 
-	port := 3000
+	ctrl.StartEngine()
 
-	// ctrl.StartEngine()
+	port := 3000
 	fmt.Printf("Starting GoLab webserver on port %d...\n", port)
 	url := fmt.Sprintf("http://localhost:%d/", port)
 

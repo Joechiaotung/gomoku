@@ -2,10 +2,10 @@ package view
 
 import (
 	"fmt"
-	// "github.com/gophergala/golab/model"
+	"github.com/skiptomyliu/gomoku/model"
 	"html/template"
-	// "image"
-	// "image/jpeg"
+	"image"
+	"image/jpeg"
 	"net/http"
 	"strconv"
 	"time"
@@ -27,10 +27,10 @@ var playTempl = template.Must(template.New("t").Parse(play_html))
 // init registers the http handlers.
 func init() {
 	http.HandleFunc("/", playHtmlHandle)
-	// http.HandleFunc("/runid", runIdHandle)
-	// http.HandleFunc("/img", imgHandle)
+	http.HandleFunc("/runid", runIdHandle)
+	http.HandleFunc("/img", imgHandle)
 	http.HandleFunc("/clicked", clickedHandle)
-	// http.HandleFunc("/new", newGameHandle)
+	http.HandleFunc("/new", newGameHandle)
 	// http.HandleFunc("/help", helpHtmlHandle)
 }
 
@@ -47,43 +47,24 @@ func playHtmlHandle(w http.ResponseWriter, r *http.Request) {
 // runidHandle serves the running app id which changes if app is restarted
 // (so browser clients can detect if app was restarted).
 func runIdHandle(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "%d", Params.RunId)
+	fmt.Fprintf(w, "runid: %d", Params.RunId)
 }
 
-// // imgHandle serves images of the player's view.
-// func imgHandle(w http.ResponseWriter, r *http.Request) {
-// 	quality, err := strconv.Atoi(r.FormValue("quality"))
-// 	if err != nil || quality < 0 || quality > 100 {
-// 		quality = 70
-// 	}
+// imgHandle serves images of the player's view.
 
-// 	// Center Gopher in view if possible
-// 	gpos := model.Gopher.Pos
-// 	rect := image.Rect(0, 0, ViewWidth, ViewHeight).Add(image.Pt(int(gpos.X)-ViewWidth/2, int(gpos.Y)-ViewHeight/2))
+var quality int // is this right?
+func imgHandle(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("in imghandle")
+	fmt.Printf("w: %v h: %v", ViewWidth, ViewHeight)
+	quality = 100
 
-// 	// But needs correction at the edges of the view (it can't be centered)
-// 	corr := image.Point{}
-// 	if rect.Min.X < 0 {
-// 		corr.X = -rect.Min.X
-// 	}
-// 	if rect.Min.Y < 0 {
-// 		corr.Y = -rect.Min.Y
-// 	}
-// 	if rect.Max.X > model.LabWidth {
-// 		corr.X = model.LabWidth - rect.Max.X
-// 	}
-// 	if rect.Max.Y > model.LabHeight {
-// 		corr.Y = model.LabHeight - rect.Max.Y
-// 	}
-// 	rect = rect.Add(corr)
-
-// 	model.Mutex.Lock()
-// 	jpeg.Encode(w, model.LabImg.SubImage(rect), &jpeg.Options{quality})
-// 	model.Mutex.Unlock()
-
-// 	// Store the new view's position:
-// 	Pos = rect.Min
-// }
+	rect := image.Rect(0, 0, ViewWidth, ViewHeight).Add(image.Pt(10, 10))
+	model.Mutex.Lock()
+	jpeg.Encode(w, model.LabImg.SubImage(rect), &jpeg.Options{quality})
+	model.Mutex.Unlock()
+	// Store the new view's position:
+	// Pos = rect.Min
+}
 
 // clickedHandle receives mouse click (mouse button pressed) events with mouse coordinates.
 func clickedHandle(w http.ResponseWriter, r *http.Request) {
@@ -111,10 +92,11 @@ func clickedHandle(w http.ResponseWriter, r *http.Request) {
 
 
 // // newGameHandle signals to start a newgame.
-// func newGameHandle(w http.ResponseWriter, r *http.Request) {
-// 	// Use non-blocking send
-// 	select {
-// 	case model.NewGameCh <- 1:
-// 	default:
-// 	}
-// }
+func newGameHandle(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("new game handle")
+	// Use non-blocking send
+	// select {
+	// case model.NewGameCh <- 1:
+	// default:
+	// }
+}
