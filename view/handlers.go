@@ -22,7 +22,7 @@ var Params = struct {
 var playTempl = template.Must(template.New("t").Parse(play_html))
 
 // The client's (browser's) view position
-// var Pos image.Point
+var Pos image.Point
 
 // init registers the http handlers.
 func init() {
@@ -54,8 +54,8 @@ func runIdHandle(w http.ResponseWriter, r *http.Request) {
 
 var quality int // is this right?
 func imgHandle(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("in imghandle")
-	fmt.Printf("w: %v h: %v", ViewWidth, ViewHeight)
+	// fmt.Println("in imghandle")
+	// fmt.Printf("w: %v h: %v", ViewWidth, ViewHeight)
 	quality = 100
 
 	rect := image.Rect(0, 0, ViewWidth, ViewHeight).Add(image.Pt(10, 10))
@@ -79,15 +79,20 @@ func clickedHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	btn, err := strconv.Atoi(r.FormValue("b"))
+	if err != nil {
+		return
+	}
+
 	fmt.Println("Clicked Handle")
 	fmt.Printf("Clicked: %s, %s", x, y)
 
 	// x, y are in the coordinate system of the client's view.
 	// Translate them to the Labyrinth's coordinate system:
-	// select {
-	// case model.ClickCh <- model.Click{Pos.X + x, Pos.Y + y, btn}:
-	// default:
-	// }
+	select {
+		case model.ClickCh <- model.Click{Pos.X + x, Pos.Y + y, btn}:
+		default:
+	}
 }
 
 
