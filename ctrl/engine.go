@@ -85,16 +85,20 @@ func simulate() {
 // handleClick handles a mouse click
 func handleClick(c model.Click) {
 	fmt.Println("Do something")
-	fmt.Printf("%s", c)
 
-	for ri := range model.Lab {
-		model.Lab[ri][ri] = model.BlockWall
-	}
 
-	model.Lab[10][20] = model.BlockWall
+	// for ri := range model.Lab {
+	// 	model.Lab[ri][ri] = model.BlockWall
+	// }
+	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
+	fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
+	// model.Lab[col][row] = model.BlockWall
+	model.Lab[row][col] = model.BlockWall
+	// model.Lab[10][10] = model.BlockWall
 	// model.Lab[2][2] := model.BlockWall
 	// model.Lab[20][20] := model.BlockWall
-	model.DrawColRow(10, 20)
+	model.DrawColRow(col, row)
+	// model.DrawColRow(10, 20)
 }
 
 // handleWinning handles the winning of game event.

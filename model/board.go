@@ -119,7 +119,7 @@ func initLabImg() {
 }
 
 func DrawColRow(col int, row int) {
-	fmt.Printf("%v, %v", col, row)
+	fmt.Printf("setting:  %v, %v", col, row)
 	for ri, row := range Lab {
 		for ci, block := range row {
 			if block == BlockEmpty {
