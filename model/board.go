@@ -17,15 +17,12 @@ var Board [][]Stone
 
 var PlayerTurn bool = true
 
-// MovingObj is a struct describing a moving object.
-type MovingObj struct {
+type PiecePos struct {
 	// The position in the board in pixel coordinates
-	Pos struct {
-		X, Y float64
-	}
-
-	// Images for each direction, each has zero Min point
-	Imgs []*image.RGBA
+	// Pos struct {
+		X, Y int
+	// }
+	// Imgs []*image.RGBA
 }
 
 // Tells if we won
