@@ -12,14 +12,14 @@ import (
 // Mutex to be used to synchronize model modifications
 var Mutex sync.Mutex
 
-// The model/data of the labyrinth
-var Lab [][]Stone
+// The model/data of the board
+var Board [][]Stone
 
 var PlayerTurn bool = true
 
 // MovingObj is a struct describing a moving object.
 type MovingObj struct {
-	// The position in the labyrinth in pixel coordinates
+	// The position in the board in pixel coordinates
 	Pos struct {
 		X, Y float64
 	}
@@ -54,31 +54,31 @@ func InitNew() {
 	fmt.Println("BOARD INIT NEW........");
 	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth, BoardHeight))
 
-	initLab()
+	initBoard()
 	initBoardImg()
 }
 
-// initLab initializes and generates a new Labyrinth.
-func initLab() {
-	fmt.Println("INIT LAB........ %v, %v", Rows, Cols);
-	Lab = make([][]Stone, Rows)
+// initBoard initializes and generates a new Board.
+func initBoard() {
+	fmt.Println("INIT BOARD........ %v, %v", Rows, Cols);
+	Board = make([][]Stone, Rows)
 
-	for i := range Lab {
-		Lab[i] = make([]Stone, Cols)
+	for i := range Board {
+		Board[i] = make([]Stone, Cols)
 	}
-	genLab()
+	genBoard()
 }
 
 
 // initBoardImg initializes and draws the image of the Labyrinth.
 func initBoardImg() {
-	// Clear the labyrinth image
+
 	fmt.Println("DRAWING........");
 	draw.Draw(BoardImg, BoardImg.Bounds(), EmptyImg, image.Pt(0, 0), draw.Over)
 
 	// Draw walls
 	// zeroPt := image.Point{}
-	for ri, row := range Lab {
+	for ri, row := range Board {
 		for ci, block := range row {
 			if block == StoneEmpty {
 				x, y := ci*BlockSize, ri*BlockSize
@@ -103,8 +103,7 @@ func initBoardImg() {
 }
 
 func DrawColRow(col int, row int) {
-	fmt.Printf("setting:  %v, %v", col, row)
-	for ri, row := range Lab {
+	for ri, row := range Board {
 		for ci, block := range row {
 			x, y := ci*BlockSize, ri*BlockSize
 			myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
@@ -121,12 +120,12 @@ func DrawColRow(col int, row int) {
 }
 
 // genLab generates a random labyrinth.
-func genLab() {
+func genBoard() {
 	// Create a "frame":
-	for ri := range Lab {
-		Lab[ri][0] = StoneEmpty
+	for ri := range Board {
+		Board[ri][0] = StoneEmpty
 	}
-	for ci := range Lab[0] {
-		Lab[0][ci] = StoneEmpty
+	for ci := range Board[0] {
+		Board[0][ci] = StoneEmpty
 	}
 }

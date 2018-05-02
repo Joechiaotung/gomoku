@@ -62,7 +62,6 @@ func simulate() {
 
 		// now := time.Now().UnixNano()
 		// dt = float64(now-t) / 1e9
-
 		// t = now
 
 		// Sleep some time.
@@ -84,18 +83,22 @@ func simulate() {
 
 // handleClick handles a mouse click
 func handleClick(c model.Click) {
-	fmt.Println("Do something")
+	// fmt.Println("Do something")
 
 	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
-	fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
+	// fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
 
 
+	model.PlayerTurn = false
 	if model.PlayerTurn == true {
-		model.Lab[row][col] = model.StoneWhite
+		model.Board[row][col] = model.StoneWhite
 	} else {
-		model.Lab[row][col] = model.StoneBlack
+		model.Board[row][col] = model.StoneBlack
 	}
+
+	NextMove()
 	model.PlayerTurn = !model.PlayerTurn
+	model.PlayerTurn = false
 
 	model.DrawColRow(col, row)
 }

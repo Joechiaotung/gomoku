@@ -82,9 +82,6 @@ func clickedHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Clicked Handle")
-	fmt.Printf("Clicked: %s, %s", x, y)
-
 	// x, y are in the coordinate system of the client's view.
 	// Translate them to the Labyrinth's coordinate system:
 	select {
