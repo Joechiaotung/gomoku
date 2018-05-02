@@ -52,10 +52,10 @@ var ClickCh = make(chan Click, 10)
 // InitNew initializes a new game.
 func InitNew() {
 	fmt.Println("BOARD INIT NEW........");
-	LabImg = image.NewRGBA(image.Rect(0, 0, LabWidth, LabHeight))
+	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth, BoardHeight))
 
 	initLab()
-	initLabImg()
+	initBoardImg()
 }
 
 // initLab initializes and generates a new Labyrinth.
@@ -70,11 +70,11 @@ func initLab() {
 }
 
 
-// initLabImg initializes and draws the image of the Labyrinth.
-func initLabImg() {
+// initBoardImg initializes and draws the image of the Labyrinth.
+func initBoardImg() {
 	// Clear the labyrinth image
 	fmt.Println("DRAWING........");
-	draw.Draw(LabImg, LabImg.Bounds(), EmptyImg, image.Pt(0, 0), draw.Over)
+	draw.Draw(BoardImg, BoardImg.Bounds(), EmptyImg, image.Pt(0, 0), draw.Over)
 
 	// Draw walls
 	// zeroPt := image.Point{}
@@ -83,20 +83,20 @@ func initLabImg() {
 			if block == StoneEmpty {
 				x, y := ci*BlockSize, ri*BlockSize
 				// rect := image.Rect(x, y, x+BlockSize, y+BlockSize)
-				// draw.Draw(LabImg, rect, WallImg, zeroPt, draw.Over)
+				// draw.Draw(BoardImg, rect, WallImg, zeroPt, draw.Over)
 
 				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
 			    green := color.RGBA{0, 100, 0, 255}
 
 			    // backfill entire surface with green
-			    draw.Draw(LabImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
+			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
 			} else {
 				x, y := ci*BlockSize, ri*BlockSize
 				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
 			    green := color.RGBA{200, 100, 200, 255}
 
 			    // backfill entire surface with green
-			    draw.Draw(LabImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
+			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
 			}
 		}
 	}
@@ -115,7 +115,7 @@ func DrawColRow(col int, row int) {
 			} else if block == StoneWhite {
 			    pieceColor = color.RGBA{255, 255, 255, 255}
 			} 
-			draw.Draw(LabImg, myimage.Bounds(), &image.Uniform{pieceColor}, image.ZP, draw.Src)
+			draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{pieceColor}, image.ZP, draw.Src)
 		}
 	}
 }

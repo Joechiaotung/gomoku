@@ -12,7 +12,7 @@ import (
 )
 
 // LoopDelay is the delay between the iterations of the main loop of the game engine, in milliseconds.
-var LoopDelay = 50 // ~20 FPS
+var LoopDelay = 20 // ~20 FPS
 
 // InitNew initializes a new game.
 func initNew() {
@@ -86,15 +86,8 @@ func simulate() {
 func handleClick(c model.Click) {
 	fmt.Println("Do something")
 
-
-	// for ri := range model.Lab {
-	// 	model.Lab[ri][ri] = model.BlockWall
-	// }
 	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
 	fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
-	// model.Lab[col][row] = model.BlockWall
-
-
 
 
 	if model.PlayerTurn == true {
@@ -104,22 +97,13 @@ func handleClick(c model.Click) {
 	}
 	model.PlayerTurn = !model.PlayerTurn
 
-
-	// model.Lab[10][10] = model.BlockWall
-	// model.Lab[2][2] := model.BlockWall
-	// model.Lab[20][20] := model.BlockWall
 	model.DrawColRow(col, row)
-	// model.DrawColRow(10, 20)
 }
 
 // handleWinning handles the winning of game event.
 func handleWinning() {
 	
 }
-
-
-// directions is a reused slice of all directions
-var directions = make([]model.Dir, model.DirLength)
 
 func init() {
 

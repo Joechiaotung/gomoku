@@ -14,20 +14,10 @@ import (
 // Tells if the embedded images are to be used. If false, images from files will be loaded.
 const useEmbeddedImages = true
 
-// Image of the labyrinth
-var LabImg *image.RGBA
-
-// Gopher images for each direction, each has zero Min point
-var GopherImgs []*image.RGBA = make([]*image.RGBA, DirLength)
-
-// Dead Gopher image.
-var DeadImg *image.RGBA
-
-// Bulldog images for each direction, each has zero Min point
-var BulldogImgs []*image.RGBA = make([]*image.RGBA, DirLength)
+// Image of the board
+var BoardImg *image.RGBA
 
 // Image of the wall block
-//var WallImg = image.NewUniform(WallCol)
 var WallImg *image.RGBA
 
 // Image of the empty block
@@ -44,10 +34,6 @@ var WonImg *image.RGBA
 
 func init() {
 	WallImg = loadImg("wall.png", true)
-	DeadImg = loadImg("gopher-dead.png", true)
-	ExitImg = loadImg("door.png", true)
-
-	TargetImg = loadImg("marker.png", false)
 	WonImg = loadImg("won.png", false)
 }
 
@@ -95,17 +81,8 @@ func decodeImg(data []byte, blockSize bool) *image.RGBA {
 // in order to embed them in the executable native binary.
 func printBase64Imgs() {
 	var names []string
-	for i := Dir(0); i < DirLength; i++ {
-		// Gopher images
-		names = append(names, fmt.Sprintf("gopher-%s.png", i))
-		// Bulldog images
-		names = append(names, fmt.Sprintf("bulldog-%s.png", i))
-	}
 
 	names = append(names, "wall.png")
-	names = append(names, "gopher-dead.png")
-	names = append(names, "door.png")
-	names = append(names, "marker.png")
 	names = append(names, "won.png")
 
 	// Generate output

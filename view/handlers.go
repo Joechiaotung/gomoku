@@ -54,16 +54,14 @@ func runIdHandle(w http.ResponseWriter, r *http.Request) {
 
 var quality int // is this right?
 func imgHandle(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("in imghandle")
-	// fmt.Printf("w: %v h: %v", ViewWidth, ViewHeight)
+
 	quality = 100
 
 	rect := image.Rect(0, 0, ViewWidth, ViewHeight).Add(image.Pt(10, 10))
 	model.Mutex.Lock()
-	jpeg.Encode(w, model.LabImg.SubImage(rect), &jpeg.Options{quality})
+	jpeg.Encode(w, model.BoardImg.SubImage(rect), &jpeg.Options{quality})
 	model.Mutex.Unlock()
-	// Store the new view's position:
-	// Pos = rect.Min
+
 }
 
 // clickedHandle receives mouse click (mouse button pressed) events with mouse coordinates.

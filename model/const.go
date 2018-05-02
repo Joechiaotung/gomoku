@@ -12,10 +12,10 @@ var (
 	Cols int
 
 	// LabWidth is the width of the labyrinth's image in pixels.
-	LabWidth int
+	BoardWidth int
 
 	// LabHeight is the height of the labyrinth's image in pixels.
-	LabHeight int
+	BoardHeight int
 )
 
 // V is the moving speed of Gopher and the Buddlogs in pixel/sec.
@@ -30,30 +30,3 @@ const (
 	StoneWhite
 	StoneBlack
 )
-
-type Dir int
-
-// Directions of Gopher (facing directions)
-const (
-	DirRight Dir = iota
-	DirLeft
-	DirUp
-	DirDown
-
-	// Not a valid direction: just to tell how many directions are there
-	DirLength
-)
-
-func (d Dir) String() string {
-	switch d {
-	case DirRight:
-		return "right"
-	case DirLeft:
-		return "left"
-	case DirUp:
-		return "up"
-	case DirDown:
-		return "down"
-	}
-	return ""
-}

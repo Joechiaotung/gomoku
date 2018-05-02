@@ -34,8 +34,8 @@ func processFlags() error {
 		return fmt.Errorf("port %d is outside of valid range", port)
 	}
 
-	model.LabWidth = model.Cols * model.BlockSize
-	model.LabHeight = model.Rows * model.BlockSize
+	model.BoardWidth = model.Cols * model.BlockSize
+	model.BoardHeight = model.Rows * model.BlockSize
 
 
 	if view.ViewWidth < 150 || view.ViewWidth > 2000 {
