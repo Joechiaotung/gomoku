@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func isOne(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func horizontalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -29,102 +29,57 @@ func isOne(i int, j int, targetCount int, board [][]model.Stone)(int) {
 		}
 	}
 	
-	if count == 1 {
-		return 10
-	} else if count == 2 {
-		return 20
-	} else if count == 3 {
-		return 40
-	} else if count >= 4 {
-		return 60
-	} else {
-		return 0
-	}
-}
-
-func isTwo(i int, j int, board [][]model.Stone)(int) {
-	count := 0
-	for k := 1; k < 3; k++ {
-
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
-			count -= 1
-		} 
-
-		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
-			count -= 1
-		}  
-
-
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
-			count += 1
-		} 
-		
-		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
-			count += 1
+	if count >= targetCount {
+		if targetCount == 1 {
+			return 10
+		} else if targetCount == 2 {
+			return 20
+		} else if targetCount == 3 {
+			return 30
+		} else if targetCount == 4 {
+			return 40
 		}
 	}
-	
-	if count >= 2 {
-		return 20
-	} 
 	return 0
 }
 
 
-func isThree(i int, j int, board [][]model.Stone)(int) {
+func verticalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
-	for k := 1; k < 4; k++ {
+	for k := 1; k <= targetCount; k++ {
 
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+		if (i < len(board)-k) && (board[i+k][j] == model.StoneBlack) {
 			count -= 1
 		} 
 
-		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+		if (i-k > 0) && (board[i-k][j] == model.StoneBlack) {
 			count -= 1
 		} 
 
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+
+		if (i < len(board)-k) && (board[i+k][j] == model.StoneWhite) {
 			count += 1
 		} 
-		
-		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+
+		if (i-k > 0) && (board[i-k][j] == model.StoneWhite) {
 			count += 1
 		}
 	}
 	
-	if count >= 3 {
-		return 30
-	} 
-	return 0
-}
-
-
-func isFour(i int, j int, board [][]model.Stone)(int) {
-	count := 0
-	for k := 1; k < 5; k++ {
-
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
-			count -= 1
-		} 
-
-		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
-			count -= 1
-		}  
-
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
-			count += 1
-		} 
-		
-		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
-			count += 1
+	if count >= targetCount {
+		if targetCount == 1 {
+			return 10
+		} else if targetCount == 2 {
+			return 20
+		} else if targetCount == 3 {
+			return 30
+		} else if targetCount == 4 {
+			return 40
 		}
 	}
-	
-	if count >= 4 {
-		return 40
-	} 
 	return 0
 }
+
 
 
 func NextMove() (bestMove model.PiecePos) {
@@ -151,21 +106,11 @@ func NextMove() (bestMove model.PiecePos) {
 				// bCount, wCount, bScore, wScore := 0, 0, 0, 0
 				// count := 0
 
-				// score := isOne(i, j, 1, board)
-				tmp[i][j] += isOne(i, j, 1, board)
-				// tmp[i][j] += isOne(i, j, 2, board)
-				// tmp[i][j] += isOne(i, j, 3, board)
-				// tmp[i][j] += isOne(i, j, 4, board)
-				// score := isOne(i, j, 2, board)
-				// score := isOne(i, j, 3, board)
-				// score := isOne(i, j, 4, board)
-				// tmp[i][j] += score
-				tmp[i][j] += isTwo(i, j, board)
-				tmp[i][j] += isThree(i, j, board)
-				tmp[i][j] += isFour(i, j, board)
-				// if score > 0 {
-				// 	fmt.Println(tmp[i][j])
-				// }
+
+				for k := 1; k < 5; k++ {
+					// tmp[i][j] += horizontalDefense(i, j, k, board)					
+					tmp[i][j] += verticalDefense(i, j, k, board)					
+				}
 
 				if tmp[i][j] > wMaxScore {
 					wMaxScore = tmp[i][j]
