@@ -7,9 +7,9 @@ import (
 	"fmt"
 )
 
-func isOne(i int, j int, board [][]model.Stone)(int) {
+func isOne(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
-	for k := 1; k < 2; k++ {
+	for k := 1; k <= targetCount; k++ {
 
 		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
 			count -= 1
@@ -29,8 +29,14 @@ func isOne(i int, j int, board [][]model.Stone)(int) {
 		}
 	}
 	
-	if count >= 1 {
+	if count == 1 {
 		return 10
+	} else if count == 2 {
+		return 20
+	} else if count == 3 {
+		return 40
+	} else if count >= 4 {
+		return 60
 	} else {
 		return 0
 	}
@@ -145,9 +151,15 @@ func NextMove() (bestMove model.PiecePos) {
 				// bCount, wCount, bScore, wScore := 0, 0, 0, 0
 				// count := 0
 
-				score := isOne(i, j, board)
-				tmp[i][j] += score
-				score = isTwo(i, j, board)
+				// score := isOne(i, j, 1, board)
+				tmp[i][j] += isOne(i, j, 1, board)
+				// tmp[i][j] += isOne(i, j, 2, board)
+				// tmp[i][j] += isOne(i, j, 3, board)
+				// tmp[i][j] += isOne(i, j, 4, board)
+				// score := isOne(i, j, 2, board)
+				// score := isOne(i, j, 3, board)
+				// score := isOne(i, j, 4, board)
+				// tmp[i][j] += score
 				tmp[i][j] += isTwo(i, j, board)
 				tmp[i][j] += isThree(i, j, board)
 				tmp[i][j] += isFour(i, j, board)
