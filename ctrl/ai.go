@@ -7,6 +7,118 @@ import (
 	"fmt"
 )
 
+func isOne(i int, j int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k < 2; k++ {
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+			count += 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+			count += 1
+		}
+	}
+	
+	if count >= 1 {
+		return 10
+	} else {
+		return 0
+	}
+}
+
+func isTwo(i int, j int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k < 3; k++ {
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+			count -= 1
+		}  
+
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+			count += 1
+		} 
+		
+		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+			count += 1
+		}
+	}
+	
+	if count >= 2 {
+		return 20
+	} 
+	return 0
+}
+
+
+func isThree(i int, j int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k < 4; k++ {
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+			count += 1
+		} 
+		
+		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+			count += 1
+		}
+	}
+	
+	if count >= 3 {
+		return 30
+	} 
+	return 0
+}
+
+
+func isFour(i int, j int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k < 5; k++ {
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+			count -= 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+			count -= 1
+		}  
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+			count += 1
+		} 
+		
+		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+			count += 1
+		}
+	}
+	
+	if count >= 4 {
+		return 40
+	} 
+	return 0
+}
 
 
 func NextMove() (bestMove model.PiecePos) {
@@ -19,7 +131,8 @@ func NextMove() (bestMove model.PiecePos) {
 	// copy(tmp, board)
 	maxCount := 0
 	
-	maxScore, bMaxScore, wMaxScore := 0, 0, 0
+	// maxScore, bMaxScore, wMaxScore := 0, 0, 0
+	maxScore, wMaxScore := 0, 0
 	bestMove = model.PiecePos{-1, -1}
 	bestMoveScore := model.PiecePos{-1, -1}
 
@@ -29,120 +142,89 @@ func NextMove() (bestMove model.PiecePos) {
 			if board[i][j] == model.StoneEmpty {
 
 				// fmt.Printf("@ %d,%d\n", i, j)
-				bCount, wCount, bScore, wScore := 0, 0, 0, 0
-				for k := 1; k < 5; k++ {
+				// bCount, wCount, bScore, wScore := 0, 0, 0, 0
+				// count := 0
 
+				score := isOne(i, j, board)
+				tmp[i][j] += score
+				score = isTwo(i, j, board)
+				tmp[i][j] += isTwo(i, j, board)
+				tmp[i][j] += isThree(i, j, board)
+				tmp[i][j] += isFour(i, j, board)
+				// if score > 0 {
+				// 	fmt.Println(tmp[i][j])
+				// }
 
-					// BLACK STONE
-					// Check for column / x-axis					
-					if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
-						bCount++
-						bScore += (5-k)
-					}
-
-					if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
-						bCount++
-						bScore += (5-k)
-					}
-
-					// row / y-axis
-					if (i < len(board)-k) && (board[i+k][j] == model.StoneBlack) {
-						bCount++
-						bScore += (5-k)
-					}
-
-					if (i-k > 0) && (board[i-k][j] == model.StoneBlack) {
-						bCount++
-						bScore += (5-k)
-					}
-
-
-
-
-					//WHITE STONE
-					if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
-						wCount++
-						wScore += (5-k)
-					}
-
-					if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
-						wCount++
-						wScore += (5-k)
-					}
-
-					// row / y-axis
-					if (i < len(board)-k) && (board[i+k][j] == model.StoneWhite) {
-						wCount++
-						wScore += (5-k)
-					}
-
-					if (i-k > 0) && (board[i-k][j] == model.StoneWhite) {
-						wCount++
-						wScore += (5-k)
-					}
-
-
-					tmp[i][j] = bCount
-
-
-					//block win					
-					if wCount >= 4 {
-						fmt.Println(tmp)
-						fmt.Println("BLOCKING the win... %v", bestMove)
-						bestMove = model.PiecePos{i, j}
-						return bestMove
-					}
-
-					// win
-					if bCount >= 4 {
-						fmt.Println(tmp)
-						fmt.Println("RETURNING the win... %v", bestMove)
-						bestMove = model.PiecePos{i, j}
-						return bestMove
-					}
-
-
-
-					// by count
-					// if bCount > maxCount {
-					// 	bestMove = model.PiecePos{i, j}
-					// 	maxCount = bCount
-					// }
-
-					// by score
-					if bScore > bMaxScore {
-						
-						bMaxScore = bScore
-						// fmt.Println("BLACK MAX SCORE")
-						// fmt.Println(bMaxScore)
-					}
-
-					if wScore > wMaxScore {
-						// bestMoveScore = model.PiecePos{i, j}
-						wMaxScore = wScore
-						// fmt.Println("WHITE MAX SCORE")
-						// fmt.Println(wMaxScore)
-						// bestMoveScore = model.PiecePos{i, j}
-						bestMoveScore = model.PiecePos{i, j}
-					}
-
-					if wMaxScore >= bMaxScore {
-						maxScore = wMaxScore
-						// bestMoveScore = model.PiecePos{i, j}
-						// fmt.Println("max wscore.....")
-						// fmt.Println(maxScore)
-						// bestMoveScore = wMaxScore
-					} else {
-						fmt.Println("max score.....")
-						fmt.Println(maxScore)
-						// maxScore = bMaxScore
-						// bestMoveScore = bMaxScore
-						// bestMoveScore = model.PiecePos{i, j}
-					}
-
-
-
+				if tmp[i][j] > wMaxScore {
+					wMaxScore = tmp[i][j]
+					bestMoveScore = model.PiecePos{i, j}
 				}
+
+
+				// for k := 1; k < 5; k++ {
+
+				// 	// BLACK STONE
+				// 	// Check for column / x-axis					
+				// 	if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+				// 		bCount++
+				// 		bScore += (5-k)
+				// 	}
+
+				// 	if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+				// 		bCount++
+				// 		bScore += (5-k)
+				// 	}
+
+				// 	// row / y-axis
+				// 	if (i < len(board)-k) && (board[i+k][j] == model.StoneBlack) {
+				// 		bCount++
+				// 		bScore += (5-k)
+				// 	}
+
+				// 	if (i-k > 0) && (board[i-k][j] == model.StoneBlack) {
+				// 		bCount++
+				// 		bScore += (5-k)
+				// 	}
+
+
+
+
+				// 	//WHITE STONE
+				// 	if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+				// 		wCount++
+				// 		wScore += (5-k)
+
+				// 	}
+
+				// 	if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+				// 		wCount++
+				// 		wScore += (5-k)
+				// 	}
+
+				// 	// row / y-axis
+				// 	if (i < len(board)-k) && (board[i+k][j] == model.StoneWhite) {
+				// 		wCount++
+				// 		wScore += (5-k)
+				// 	}
+
+				// 	if (i-k > 0) && (board[i-k][j] == model.StoneWhite) {
+				// 		wCount++
+				// 		wScore += (5-k)
+				// 	}
+
+				// 	tmp[i][j] = bCount
+				// 	tmp[i][j] = wScore
+
+				// 	// defense
+				// 	if wScore > wMaxScore && wMaxScore >= bMaxScore {
+				// 		// bestMoveScore = model.PiecePos{i, j}
+				// 		wMaxScore = wScore
+				// 		// fmt.Println("WHITE MAX SCORE")
+				// 		// fmt.Println(wMaxScore)
+				// 		// bestMoveScore = model.PiecePos{i, j}
+				// 		bestMoveScore = model.PiecePos{i, j}
+				// 	}  
+				// }
 
 			}
 
@@ -152,7 +234,13 @@ func NextMove() (bestMove model.PiecePos) {
 		}
 
 	}
-	fmt.Println(tmp)
+
+
+	for i := range board {
+		fmt.Println(tmp[i])
+	} 
+
+	// fmt.Println(tmp)
 	// fmt.Println("BY MAX COUNT %v", bestMove)
 	fmt.Printf("BY MAX SCORE %v - %v\n", bestMoveScore, maxScore)
 	fmt.Printf("highest: %v - %v\n", bestMove, maxCount)
