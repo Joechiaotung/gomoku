@@ -7,6 +7,39 @@ import (
 	"fmt"
 )
 
+
+func defenseScore(count int, targetCount int)(int) {
+	if count >= targetCount {
+		if targetCount == 1 {
+			return 10
+		} else if targetCount == 2 {
+			return 20
+		} else if targetCount == 3 {
+			return 30
+		} else if targetCount == 4 {
+			return 40
+		}
+	}
+	return 0
+}
+
+
+func offenseScore(count int, targetCount int)(int) {
+	if count >= targetCount {
+		if targetCount == 1 {
+			return 11
+		} else if targetCount == 2 {
+			return 30
+		} else if targetCount == 3 {
+			return 40
+		} else if targetCount == 4 {
+			return 10000
+		}
+	}
+	return 0
+}
+
+
 func horizontalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
@@ -29,18 +62,7 @@ func horizontalDefense(i int, j int, targetCount int, board [][]model.Stone)(int
 		}
 	}
 	
-	if count >= targetCount {
-		if targetCount == 1 {
-			return 10
-		} else if targetCount == 2 {
-			return 20
-		} else if targetCount == 3 {
-			return 30
-		} else if targetCount == 4 {
-			return 40
-		}
-	}
-	return 0
+	return defenseScore(count, targetCount)
 }
 
 
@@ -56,7 +78,6 @@ func verticalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 			count -= 1
 		} 
 
-
 		if (i < len(board)-k) && (board[i+k][j] == model.StoneWhite) {
 			count += 1
 		} 
@@ -66,20 +87,59 @@ func verticalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 		}
 	}
 	
-	if count >= targetCount {
-		if targetCount == 1 {
-			return 10
-		} else if targetCount == 2 {
-			return 20
-		} else if targetCount == 3 {
-			return 30
-		} else if targetCount == 4 {
-			return 40
-		}
-	}
-	return 0
+	return defenseScore(count, targetCount)
 }
 
+
+
+func horizontalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k <= targetCount; k++ {
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
+			count -= 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
+			count -= 1
+		} 
+
+
+		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
+			count += 1
+		} 
+
+		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
+			count += 1
+		}
+	}
+	
+	return offenseScore(count, targetCount)
+}
+
+func verticalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+	count := 0
+	for k := 1; k <= targetCount; k++ {
+
+		if (i < len(board)-k) && (board[i+k][j] == model.StoneWhite) {
+			count -= 1
+		} 
+
+		if (i-k > 0) && (board[i-k][j] == model.StoneWhite) {
+			count -= 1
+		} 
+
+		if (i < len(board)-k) && (board[i+k][j] == model.StoneBlack) {
+			count += 1
+		} 
+
+		if (i-k > 0) && (board[i-k][j] == model.StoneBlack) {
+			count += 1
+		}
+	}
+	
+	return offenseScore(count, targetCount)
+}
 
 
 func NextMove() (bestMove model.PiecePos) {
@@ -102,14 +162,13 @@ func NextMove() (bestMove model.PiecePos) {
 
 			if board[i][j] == model.StoneEmpty {
 
-				// fmt.Printf("@ %d,%d\n", i, j)
-				// bCount, wCount, bScore, wScore := 0, 0, 0, 0
-				// count := 0
 
 
 				for k := 1; k < 5; k++ {
-					// tmp[i][j] += horizontalDefense(i, j, k, board)					
+					tmp[i][j] += horizontalDefense(i, j, k, board)					
 					tmp[i][j] += verticalDefense(i, j, k, board)					
+					tmp[i][j] += horizontalOffense(i, j, k, board)
+					tmp[i][j] += verticalOffense(i, j, k, board)
 				}
 
 				if tmp[i][j] > wMaxScore {
@@ -185,9 +244,6 @@ func NextMove() (bestMove model.PiecePos) {
 
 			}
 
-			// if board[i][j] == model.StoneBlack {
-			// 	fmt.Printf("black %d,%d\n", i, j)
-			// }
 		}
 
 	}
