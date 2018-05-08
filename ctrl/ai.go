@@ -242,7 +242,7 @@ func horizOffense(i int, j int, board [][]model.Stone)(int) {
 // -o-o-o-
 // -ooo-o-
 
-func isOneAway(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+func threeHorizontal(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 	count := 0
 	for k := 0; k < 7; k++ {
 
@@ -256,20 +256,9 @@ func isOneAway(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 		if (j < len(board)-k) && (board[i][j+k] == stone) {
 			count += 1
 		} 
-
-		// if (i == 0) && (j == 1) {
-		// 	if (j < len(board)-k) && (board[i][j+k] == stone) {
-		// 		fmt.Printf("GOOD %v,%v - %v\n", i, j+k, board[i][j+k])
-		// 	} else {
-		// 		fmt.Printf("SHOULDNT BE HERE %v,%v - %v\n", i, j+k, board[i][j+k])
-		// 	}
-		// }
-
-
 	}
 
 	if count == 7 {
-		fmt.Println("@@@@@@@@@@@@@ FIRST 100")
 		return 100
 	}
 
@@ -292,18 +281,59 @@ func isOneAway(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 	}
 
 	if count == 3 {
-		fmt.Println("@@@@@@@@@@@@@ SECOND 100")
 		return 100		
 	} else {
 		return 0
 	}
-
 }
 
-// 	if board[i+k][j] == model.StoneEmpty {
 
-// 	}
-// }
+func threeVertical(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+	count := 0
+	for k := 0; k < 7; k++ {
+
+		stone := piece
+		if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
+			stone = model.StoneEmpty
+		} else {
+			stone = piece
+		}
+
+		if (i < len(board)-k) && (board[i+k][j] == stone) {
+			count += 1
+		} 
+	}
+
+	if count == 7 {
+		return 100
+	}
+
+	count = 0
+	for k := 0; k < 6; k++ {
+		if (i < len(board)-k) {
+			if (k == 0) || (k == 5) {
+				if board[i+k][j] != model.StoneEmpty {
+					return 0
+				}
+			} else {
+				if board[i+k][j] == piece {
+					count += 1
+				} else if board[i+k][j] != model.StoneEmpty {
+					return 0
+				}
+			}
+		}
+		
+	}
+
+	if count == 3 {
+		return 100		
+	} else {
+		return 0
+	}
+}
+
+
 
 
 
@@ -502,7 +532,7 @@ func NextMove() (bestMove model.PiecePos) {
 
 				// isWin(i, j, 0, board)
 
-				for k := 1; k < 2; k++ {
+				for k := 1; k < 3; k++ {
 					tmp[i][j] += horizontalDefense(i, j, k, board)					
 					tmp[i][j] += verticalDefense(i, j, k, board)					
 					tmp[i][j] += diagonalDefense(i, j, k, board)
@@ -520,7 +550,10 @@ func NextMove() (bestMove model.PiecePos) {
 				tmp[i][j] += horizDefense(i, j, board)
 				tmp[i][j] += vertDefense(i, j, board)
 
-				tmp[i][j] += isOneAway(i, j, model.StoneWhite, board)
+				tmp[i][j] += threeHorizontal(i, j, model.StoneWhite, board)
+				tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
+				tmp[i][j] += threeHorizontal(i, j, model.StoneBlack, board)
+				tmp[i][j] += threeVertical(i, j, model.StoneBlack, board)
 
 
 				if tmp[i][j] > wMaxScore {
