@@ -31,7 +31,7 @@ func offenseScore(count int, targetCount int)(int) {
 		} else if targetCount == 2 {
 			return 30
 		} else if targetCount == 3 {
-			return 50
+			return 500
 		} else if targetCount == 4 {
 			return 10000000
 		}
@@ -40,7 +40,7 @@ func offenseScore(count int, targetCount int)(int) {
 }
 
 
-func horizontalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func hHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count0, count1 := 0, 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -127,7 +127,7 @@ func diagonalDefense2(i int, j int, targetCount int, board [][]model.Stone)(int)
 }
 
 
-func verticalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func vHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count0, count1 := 0, 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -157,27 +157,9 @@ func verticalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 	
 }
 
-/*
--0
-0-
--00
-0-0
-00-
--000
-0-00
-00-0
-000-
-
--0000
-0-000
-00-00
-000-0
-0000-
-
-*/
-func vertOffense(i int, j int, board [][]model.Stone)(int) {
+func vPotentialOffense(i int, j int, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
-	// fmt.Printf("%v,%v -- ", i, j)
+
 	for m := 0; m < 5; m++ {
 		count = 0
 		for k := 0; k < 5; k++ {
@@ -189,45 +171,41 @@ func vertOffense(i int, j int, board [][]model.Stone)(int) {
 			}
 
 			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneWhite) {
-				return 0
+				count = 0
+				break
 			}
-			// fmt.Printf("(%v,%v), ", i+k-m, j)
 		}
 		if count > maxCount {
 			maxCount = count
 		}
-		// fmt.Printf("\n")
-	}
-	if maxCount > 1 {
-		fmt.Printf("OFFENSE VERT SCORE COUNT: (%v,%v) - %v\n", i, j, maxCount)		
 	}
 
 	return offenseScore(maxCount, maxCount)
 }
 
-func horizOffense(i int, j int, board [][]model.Stone)(int) {
+func hPotentialOffense(i int, j int, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
+
 	for m := 0; m < 5; m++ {
 		count = 0
 		for k := 0; k < 5; k++ {
 			if k-m == 0 {
 				continue
 			}
+
 			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneBlack) {
 				count += 1
 			}
 
 			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneWhite) {
-				return 0
+				count = 0
+				break
 			}
 		}
 		if count > maxCount {
 			maxCount = count
 		}
 	}
-	// if maxCount > 1 {
-	// 	fmt.Printf("OFFENSE HORIZ SCORE COUNT: (%v,%v) - %v | score: %v\n", i, j, maxCount, offenseScore(maxCount, maxCount))		
-	// }
 
 	return offenseScore(maxCount, maxCount)
 }
@@ -245,17 +223,19 @@ func horizOffense(i int, j int, board [][]model.Stone)(int) {
 func threeHorizontal(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 	count := 0
 	for k := 0; k < 7; k++ {
+		
+		if (j < len(board)-k) {
+			stone := piece
+			if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
+				stone = model.StoneEmpty
+			} else {
+				stone = piece
+			}
 
-		stone := piece
-		if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
-			stone = model.StoneEmpty
-		} else {
-			stone = piece
-		}
-
-		if (j < len(board)-k) && (board[i][j+k] == stone) {
-			count += 1
-		} 
+			if (board[i][j+k] == stone) {
+				count += 1
+			} 
+		}	
 	}
 
 	if count == 7 {
@@ -292,16 +272,18 @@ func threeVertical(i int, j int, piece model.Stone, board [][]model.Stone)(int) 
 	count := 0
 	for k := 0; k < 7; k++ {
 
-		stone := piece
-		if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
-			stone = model.StoneEmpty
-		} else {
-			stone = piece
-		}
+		if (i < len(board)-k) {
+			stone := piece
+			if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
+				stone = model.StoneEmpty
+			} else {
+				stone = piece
+			}
 
-		if (i < len(board)-k) && (board[i+k][j] == stone) {
-			count += 1
-		} 
+			if (board[i+k][j] == stone) {
+				count += 1
+			} 
+		}
 	}
 
 	if count == 7 {
@@ -335,11 +317,54 @@ func threeVertical(i int, j int, piece model.Stone, board [][]model.Stone)(int) 
 
 
 
+func threeDiagonal(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+	count := 0
+	for k := 0; k < 7; k++ {
+
+		stone := piece
+		if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
+			stone = model.StoneEmpty
+		} else {
+			stone = piece
+		}
+
+		if (j < len(board)-k) && (i < len(board)-k) && (board[i+k][j+k] == stone) {
+			count += 1
+		}
+	}
+
+	if count == 7 {
+		return 100
+	}
+
+	count = 0
+	for k := 0; k < 6; k++ {
+		if (j < len(board)-k) && (i < len(board)-k) {
+			if (k == 0) || (k == 5) {
+				if board[i+k][j+k] != model.StoneEmpty {
+					return 0
+				}
+			} else {
+				if board[i+k][j+k] == piece {
+					count += 1
+				} else if board[i+k][j+k] != model.StoneEmpty {
+					return 0
+				}
+			}
+		}
+		
+	}
+
+	if count == 3 {
+		return 100		
+	} else {
+		return 0
+	}
+}
 
 
-func vertDefense(i int, j int, board [][]model.Stone)(int) {
+func vPotentialDefense(i int, j int, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
-	// fmt.Printf("%v,%v -- ", i, j)
 	for m := 0; m < 5; m++ {
 		count = 0
 		for k := 0; k < 5; k++ {
@@ -351,34 +376,20 @@ func vertDefense(i int, j int, board [][]model.Stone)(int) {
 			}
 
 			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneBlack) {
-				return 0
-			}
-
-			if (j == 1) && (i == 5) {
-				fmt.Printf("(%v,%v), ", i+k-m, j)				
+				count = 0
+				break
 			}
 
 		}
 		if count > maxCount {
 			maxCount = count
 		}
-		if (j == 1) && (i == 5) {
-			fmt.Printf("\n")
-		}
 	}
-
-	// if (j == 1) && (i == 5) {
-	// 	fmt.Printf("---------- the count: %v", maxCount)
-	// }
-
-	// if maxCount > 1 {
-	// 	fmt.Printf("DEFENSE VERT SCORE COUNT: (%v,%v) - %v | score: %v\n", i, j, maxCount, defenseScore(maxCount, maxCount))		
-	// }
 
 	return defenseScore(maxCount, maxCount)
 }
 
-func horizDefense(i int, j int, board [][]model.Stone)(int) {
+func hPotentialDefense(i int, j int, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
 	for m := 0; m < 5; m++ {
 		count = 0
@@ -391,22 +402,20 @@ func horizDefense(i int, j int, board [][]model.Stone)(int) {
 			}
 
 			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneBlack) {
-				return 0
+				count = 0
+				break
 			}
 		}
 		if count > maxCount {
 			maxCount = count
 		}
 	}
-	// if maxCount > 1 {
-	// 	fmt.Printf("OFFENSE HORIZ SCORE COUNT: (%v,%v) - %v | score: %v\n", i, j, maxCount, offenseScore(maxCount, maxCount))		
-	// }
 
 	return defenseScore(maxCount, maxCount)
 }
 
 
-func horizontalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func hHeatOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -430,7 +439,7 @@ func horizontalOffense(i int, j int, targetCount int, board [][]model.Stone)(int
 	return offenseScore(count, targetCount)		
 }
 
-func verticalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func vHeatOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -451,12 +460,11 @@ func verticalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 		}
 	}
 	
-
 	return offenseScore(count, targetCount)		
 }
 
 
-func diagonalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func dHeatOffense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -483,7 +491,7 @@ func diagonalOffense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 }
 
 
-func diagonalOffense2(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func dHeatOffense2(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count := 0
 	for k := 1; k <= targetCount; k++ {
 
@@ -529,32 +537,29 @@ func NextMove() (bestMove model.PiecePos) {
 
 			if board[i][j] == model.StoneEmpty {
 
+				for k := 1; k < 4; k++ {
+					tmp[i][j] += hHeatDefense(i, j, k, board)					
+					tmp[i][j] += vHeatDefense(i, j, k, board)					
 
-				// isWin(i, j, 0, board)
+					// tmp[i][j] += diagonalDefense(i, j, k, board)
+					// tmp[i][j] += diagonalDefense2(i, j, k, board)
 
-				for k := 1; k < 3; k++ {
-					tmp[i][j] += horizontalDefense(i, j, k, board)					
-					tmp[i][j] += verticalDefense(i, j, k, board)					
-					tmp[i][j] += diagonalDefense(i, j, k, board)
-					tmp[i][j] += diagonalDefense2(i, j, k, board)
+					tmp[i][j] += hHeatOffense(i, j, k, board)
+					tmp[i][j] += vHeatOffense(i, j, k, board)
 
-					// tmp[i][j] += horizontalOffense(i, j, k, board)
-					// tmp[i][j] += verticalOffense(i, j, k, board)
 					// tmp[i][j] += diagonalOffense(i, j, k, board)
 					// tmp[i][j] += diagonalOffense2(i, j, k, board)
-
 				}
 
-				tmp[i][j] += horizOffense(i, j, board)
-				tmp[i][j] += vertOffense(i, j, board)
-				tmp[i][j] += horizDefense(i, j, board)
-				tmp[i][j] += vertDefense(i, j, board)
+				tmp[i][j] += hPotentialOffense(i, j, board)
+				tmp[i][j] += vPotentialOffense(	i, j, board)
+				tmp[i][j] += hPotentialDefense(i, j, board)
+				tmp[i][j] += vPotentialDefense(i, j, board)
 
 				tmp[i][j] += threeHorizontal(i, j, model.StoneWhite, board)
 				tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
 				tmp[i][j] += threeHorizontal(i, j, model.StoneBlack, board)
 				tmp[i][j] += threeVertical(i, j, model.StoneBlack, board)
-
 
 				if tmp[i][j] > wMaxScore {
 					wMaxScore = tmp[i][j]
