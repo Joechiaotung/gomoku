@@ -15,7 +15,7 @@ func defenseScore(count int, targetCount int)(int) {
 		} else if targetCount == 2 {
 			return 20
 		} else if targetCount == 3 {
-			return 50
+			return 55
 		} else if targetCount == 4 {
 			return 100000
 		}
@@ -336,44 +336,75 @@ func dPotential2(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 // -oo-o-
 
 
-// -o-o-o-
-// -ooo-o-
-
+// Check for three horizontal with a) two empy spaces surrounding for consecutive pieces.
+// and b) one empty space surrounding for non-consecutive pieces
+// a) x-ooo-x
+// b) -o-oo-
+//    -oo-o-
+// This format guarantees a one-move away from win
 func threeHorizontal(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
-	count := 0
-	for k := 0; k < 7; k++ {
-		
+	count, count0, count1 := 0, 0, 0
+	targetStone := model.StoneBlack
+	notTargetStone := model.StoneWhite
+
+	if piece == model.StoneWhite {
+		targetStone = model.StoneWhite
+		notTargetStone = model.StoneBlack		
+	} 
+
+	// x-ooo-x
+	for k := 0; k < 6; k++ {
+		if (k == 0) || (k == 4) || (k == 5) {
+			targetStone = model.StoneEmpty
+		} else {
+			targetStone = piece
+		}
+
 		if (j < len(board)-k) {
-			stone := piece
-			if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
-				stone = model.StoneEmpty
-			} else {
-				stone = piece
+			// Check once that -1 stone is empty
+			if (k == 0) && (j-1 >= 0) && (board[i][j-1] == model.StoneEmpty) {
+				count0 += 1
 			}
 
-			if (board[i][j+k] == stone) {
-				count += 1
+			if (board[i][j+k] == targetStone) {
+				count0 += 1
 			} 
 		}	
+
+		if (j-k >= 0) {
+			// check once that +1 stone is empty
+			if (k == 0) && (j < len(board)-1) && (board[i][j+1] == model.StoneEmpty) {
+				count1 += 1
+			}
+
+			if (board[i][j-k] == targetStone) {
+				count1 += 1
+			} 
+		}
+
 	}
 
-	if count == 7 {
+
+	if count0 == 7 || count1 == 7 {
 		return 100
 	}
 
+
+	// -oo-o-
+	// -o-oo-
 	count = 0
-	for k := 0; k < 6; k++ {
-		if (j < len(board)-k) {
-			if (k == 0) || (k == 5) {
-				if board[i][j+k] != model.StoneEmpty {
-					return 0
-				}
-			} else {
-				if board[i][j+k] == piece {
-					count += 1
-				} else if board[i][j+k] != model.StoneEmpty {
-					return 0
-				}
+	for k := 1; k < 3; k++ {
+		if (j < len(board)-k) && (j-k >= 0) {
+			if (k == 1) && (board[i][j+k] == piece) && (board[i][j-k] == piece) {
+				count = 2
+			} else if board[i][j+k] == piece {
+				count += 1
+			} else if board[i][j-k] == piece {
+				count += 1
+			} else if board[i][j+k] == notTargetStone {
+				return 0
+			} else if board[i][j-k] == notTargetStone {
+				return 0
 			}
 		}
 		
@@ -384,6 +415,7 @@ func threeHorizontal(i int, j int, piece model.Stone, board [][]model.Stone)(int
 	} else {
 		return 0
 	}
+
 }
 
 
@@ -650,23 +682,23 @@ func NextMove() (bestMove model.PiecePos) {
 			if board[i][j] == model.StoneEmpty {
 
 				for k := 1; k < 4; k++ {
-					tmp[i][j] += hHeatDefense(i, j, k, board)					
-					tmp[i][j] += vHeatDefense(i, j, k, board)					
+					// tmp[i][j] += hHeatDefense(i, j, k, board)					
+					// tmp[i][j] += vHeatDefense(i, j, k, board)					
 
 					// tmp[i][j] += dHeatDefense(i, j, k, board)
 					// tmp[i][j] += dHeatDefense2(i, j, k, board)
 
-					tmp[i][j] += hHeatOffense(i, j, k, board)
-					tmp[i][j] += vHeatOffense(i, j, k, board)
+					// tmp[i][j] += hHeatOffense(i, j, k, board)
+					// tmp[i][j] += vHeatOffense(i, j, k, board)
 
 					// tmp[i][j] += dHeatOffense(i, j, k, board)
 					// tmp[i][j] += dHeatOffense2(i, j, k, board)
 				}
 
-				tmp[i][j] += hPotential(i, j, model.StoneBlack, board)
-				tmp[i][j] += hPotential(i, j, model.StoneWhite, board)
-				tmp[i][j] += vPotential(i, j, model.StoneBlack, board)
-				tmp[i][j] += vPotential(i, j, model.StoneWhite, board)
+				// tmp[i][j] += hPotential(i, j, model.StoneBlack, board)
+				// tmp[i][j] += hPotential(i, j, model.StoneWhite, board)
+				// tmp[i][j] += vPotential(i, j, model.StoneBlack, board)
+				// tmp[i][j] += vPotential(i, j, model.StoneWhite, board)
 
 				// tmp[i][j] += dPotential(i, j, model.StoneBlack, board)
 				// tmp[i][j] += dPotential(i, j, model.StoneWhite, board)
@@ -675,9 +707,9 @@ func NextMove() (bestMove model.PiecePos) {
 
 
 				tmp[i][j] += threeHorizontal(i, j, model.StoneWhite, board)
-				tmp[i][j] += threeHorizontal(i, j, model.StoneBlack, board)
-				tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
-				tmp[i][j] += threeVertical(i, j, model.StoneBlack, board)
+				// tmp[i][j] += threeHorizontal(i, j, model.StoneBlack, board)
+				// tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
+				// tmp[i][j] += threeVertical(i, j, model.StoneBlack, board)
 				// tmp[i][j] += threeDiagonal(i, j, model.StoneWhite, board)
 				// tmp[i][j] += threeDiagonal(i, j, model.StoneBlack, board)
 				// tmp[i][j] += threeDiagonal2(i, j, model.StoneWhite, board)
