@@ -44,20 +44,24 @@ func hHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count0, count1 := 0, 0
 	for k := 1; k <= targetCount; k++ {
 
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneBlack) {
-			count0 -= 1
-		} 
+		if (j < len(board)-k) {
+			if (board[i][j+k] == model.StoneBlack) {
+				count0 -= 1
+			} 
 
-		if (j < len(board)-k) && (board[i][j+k] == model.StoneWhite) {
-			count0 += 1
-		} 
+			if (board[i][j+k] == model.StoneWhite) {
+				count0 += 1
+			} 
+		}
 
-		if (j-k > 0) && (board[i][j-k] == model.StoneBlack) {
-			count1 -= 1
-		} 
+		if (j-k > 0) {
+			if (board[i][j-k] == model.StoneBlack) {
+				count1 -= 1
+			} 
 
-		if (j-k > 0) && (board[i][j-k] == model.StoneWhite) {
-			count1 += 1
+			if  (board[i][j-k] == model.StoneWhite) {
+				count1 += 1
+			}
 		}
 	}
 
@@ -69,25 +73,28 @@ func hHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 
 }
 
-func diagonalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func dHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count0, count1 := 0, 0
 	for k := 1; k <= targetCount; k++ {
+		if (i < len(board)-k) && (j < len(board)-k) {
+			if (board[i+k][j+k] == model.StoneBlack) {
+				count0 -= 1
+			} 
 
-		if (i < len(board)-k) && (j < len(board)-k) && (board[i+k][j+k] == model.StoneBlack) {
-			count0 -= 1
-		} 
+			if (board[i+k][j+k] == model.StoneWhite) {
+				count0 += 1
+			}
+		}
 
-		if (i < len(board)-k) && j < (len(board)-k) && (board[i+k][j+k] == model.StoneWhite) {
-			count0 += 1
-		} 
+		if (i-k > 0) && (j-k > 0) {
+			if (board[i-k][j-k] == model.StoneBlack) {
+				count1 -= 1
+			} 
 
-		if (i-k > 0) && (j-k > 0) && (board[i-k][j-k] == model.StoneBlack) {
-			count1 -= 1
-		} 
-
-		if (i-k > 0) && (j-k > 0) && (board[i-k][j-k] == model.StoneWhite) {
-			count1 += 1
-		}	
+			if (board[i-k][j-k] == model.StoneWhite) {
+				count1 += 1
+			}	
+		}
 	}
 	
 	if count0 > count1 {
@@ -98,25 +105,30 @@ func diagonalDefense(i int, j int, targetCount int, board [][]model.Stone)(int) 
 }
 
 
-func diagonalDefense2(i int, j int, targetCount int, board [][]model.Stone)(int) {
+func dHeatDefense2(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	count0, count1 := 0, 0
 	for k := 1; k <= targetCount; k++ {
 
-		if (i-k > 0) && (j < len(board)-k) && (board[i-k][j+k] == model.StoneBlack) {
-			count0 -= 1
-		} 
+		if (i-k > 0) && (j < len(board)-k) {
+			if (board[i-k][j+k] == model.StoneBlack) {
+				count0 -= 1
+			} 
 
-		if (i-k > 0) && (j < len(board)-k) && (board[i-k][j+k] == model.StoneWhite) {
-			count0 += 1
-		} 
-
-		if (i < len(board)-k) && (j-k > 0) && (board[i+k][j-k] == model.StoneBlack) {
-			count1 -= 1
-		} 
-
-		if (i < len(board)-k) && (j-k > 0) && (board[i+k][j-k] == model.StoneWhite) {
-			count1 += 1
+			if (board[i-k][j+k] == model.StoneWhite) {
+				count0 += 1
+			} 
 		}
+
+		if (i < len(board)-k) && (j-k > 0) {
+			if (board[i+k][j-k] == model.StoneBlack) {
+				count1 -= 1
+			} 
+
+			if (board[i+k][j-k] == model.StoneWhite) {
+				count1 += 1
+			}
+		}
+
 	}
 	
 	if count0 > count1 {
@@ -157,8 +169,19 @@ func vHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 	
 }
 
-func vPotentialOffense(i int, j int, board [][]model.Stone)(int) {
+func vPotential(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
+
+	targetStone := model.StoneBlack
+	notTargetStone := model.StoneWhite
+	scoreFunc := offenseScore
+
+	if piece == model.StoneWhite {
+		targetStone = model.StoneWhite
+		notTargetStone = model.StoneBlack
+		scoreFunc = defenseScore 		
+	} 
+
 
 	for m := 0; m < 5; m++ {
 		count = 0
@@ -166,25 +189,38 @@ func vPotentialOffense(i int, j int, board [][]model.Stone)(int) {
 			if k-m == 0 {
 				continue
 			}
-			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneBlack) {
-				count += 1
-			}
+			if (i < len(board)-k-m) && (i+k-m > 0) {
+				if (board[i+k-m][j] == targetStone) {
+					count += 1
+				}
 
-			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneWhite) {
-				count = 0
-				break
+				if (board[i+k-m][j] == notTargetStone) {
+					count = 0
+					break
+				}
 			}
 		}
+
 		if count > maxCount {
 			maxCount = count
 		}
 	}
 
-	return offenseScore(maxCount, maxCount)
+	return scoreFunc(maxCount, maxCount)
 }
 
-func hPotentialOffense(i int, j int, board [][]model.Stone)(int) {
+func hPotential(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 	count, maxCount := 0, 0
+
+	targetStone := model.StoneBlack
+	notTargetStone := model.StoneWhite
+	scoreFunc := offenseScore
+
+	if piece == model.StoneWhite {
+		targetStone = model.StoneWhite
+		notTargetStone = model.StoneBlack
+		scoreFunc = defenseScore 		
+	} 
 
 	for m := 0; m < 5; m++ {
 		count = 0
@@ -193,21 +229,104 @@ func hPotentialOffense(i int, j int, board [][]model.Stone)(int) {
 				continue
 			}
 
-			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneBlack) {
-				count += 1
-			}
+			if (j < len(board)-k-m) && (j+k-m > 0) {
+				if (board[i][j+k-m] == targetStone) {
+					count += 1
+				}
 
-			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneWhite) {
-				count = 0
-				break
+				if (board[i][j+k-m] == notTargetStone) {
+					count = 0
+					break
+				}
 			}
 		}
 		if count > maxCount {
 			maxCount = count
 		}
 	}
+	return scoreFunc(maxCount, maxCount)
+}
 
-	return offenseScore(maxCount, maxCount)
+
+func dPotential(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+	count, maxCount := 0, 0
+
+	targetStone := model.StoneBlack
+	notTargetStone := model.StoneWhite
+	scoreFunc := offenseScore
+
+	if piece == model.StoneWhite {
+		targetStone = model.StoneWhite
+		notTargetStone = model.StoneBlack
+		scoreFunc = defenseScore 		
+	} 
+
+	for m := 0; m < 5; m++ {
+		count = 0
+		for k := 0; k < 5; k++ {
+			if k-m == 0 {
+				continue
+			}
+
+			if (j < len(board)-k-m) && (j+k-m > 0) && (i < len(board)-k-m) && (i+k-m > 0) {
+				if (board[i+k-m][j+k-m] == targetStone) {
+					count += 1
+				}
+
+				if (board[i+k-m][j+k-m] == notTargetStone) {
+					count = 0
+					break
+				}
+			}
+			
+
+			
+		}
+		if count > maxCount {
+			maxCount = count
+		}
+	}
+	return scoreFunc(maxCount, maxCount)
+}
+
+
+func dPotential2(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+	count, maxCount := 0, 0
+
+	targetStone := model.StoneBlack
+	notTargetStone := model.StoneWhite
+	scoreFunc := offenseScore
+
+	if piece == model.StoneWhite {
+		targetStone = model.StoneWhite
+		notTargetStone = model.StoneBlack
+		scoreFunc = defenseScore 		
+	} 
+
+	for m := 0; m < 5; m++ {
+		count = 0
+		for k := 0; k < 5; k++ {
+			if k-m == 0 {
+				continue
+			}
+
+			if (j < len(board)-k-m) && (j+k-m > 0) && (i-k-m > 0) {
+				if (board[i-k-m][j+k-m] == targetStone) {
+					count += 1
+				}
+
+				if (board[i-k-m][j+k-m] == notTargetStone) {
+					count = 0
+					break
+				}
+			}
+			
+		}
+		if count > maxCount {
+			maxCount = count
+		}
+	}
+	return scoreFunc(maxCount, maxCount)
 }
 
 // --ooo
@@ -363,55 +482,48 @@ func threeDiagonal(i int, j int, piece model.Stone, board [][]model.Stone)(int) 
 }
 
 
-func vPotentialDefense(i int, j int, board [][]model.Stone)(int) {
-	count, maxCount := 0, 0
-	for m := 0; m < 5; m++ {
-		count = 0
-		for k := 0; k < 5; k++ {
-			if k-m == 0 {
-				continue
-			}
-			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneWhite) {
-				count += 1
-			}
+func threeDiagonal2(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
+	count := 0
+	for k := 0; k < 7; k++ {
 
-			if (i < len(board)-k-m) && (i+k-m > 0) && (board[i+k-m][j] == model.StoneBlack) {
-				count = 0
-				break
-			}
-
+		stone := piece
+		if (k == 0) || (k == 1) || (k == 5) || (k == 6) {
+			stone = model.StoneEmpty
+		} else {
+			stone = piece
 		}
-		if count > maxCount {
-			maxCount = count
+
+		if (j < len(board)-k) && (i-k > 0) && (board[i-k][j+k] == stone) {
+			count += 1
 		}
 	}
 
-	return defenseScore(maxCount, maxCount)
-}
+	if count == 7 {
+		return 100
+	}
 
-func hPotentialDefense(i int, j int, board [][]model.Stone)(int) {
-	count, maxCount := 0, 0
-	for m := 0; m < 5; m++ {
-		count = 0
-		for k := 0; k < 5; k++ {
-			if k-m == 0 {
-				continue
+	count = 0
+	for k := 0; k < 6; k++ {
+		if (j < len(board)-k) && (i-k > 0) {
+			if (k == 0) || (k == 5) {
+				if board[i-k][j+k] != model.StoneEmpty {
+					return 0
+				}
+			} else {
+				if board[i-k][j+k] == piece {
+					count += 1
+				} else if board[i-k][j+k] != model.StoneEmpty {
+					return 0
+				}
 			}
-			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneWhite) {
-				count += 1
-			}
-
-			if (j < len(board)-k-m) && (j+k-m > 0) && (board[i][j+k-m] == model.StoneBlack) {
-				count = 0
-				break
-			}
-		}
-		if count > maxCount {
-			maxCount = count
 		}
 	}
 
-	return defenseScore(maxCount, maxCount)
+	if count == 3 {
+		return 100
+	} else {
+		return 0
+	}
 }
 
 
@@ -541,25 +653,35 @@ func NextMove() (bestMove model.PiecePos) {
 					tmp[i][j] += hHeatDefense(i, j, k, board)					
 					tmp[i][j] += vHeatDefense(i, j, k, board)					
 
-					// tmp[i][j] += diagonalDefense(i, j, k, board)
-					// tmp[i][j] += diagonalDefense2(i, j, k, board)
+					// tmp[i][j] += dHeatDefense(i, j, k, board)
+					// tmp[i][j] += dHeatDefense2(i, j, k, board)
 
 					tmp[i][j] += hHeatOffense(i, j, k, board)
 					tmp[i][j] += vHeatOffense(i, j, k, board)
 
-					// tmp[i][j] += diagonalOffense(i, j, k, board)
-					// tmp[i][j] += diagonalOffense2(i, j, k, board)
+					// tmp[i][j] += dHeatOffense(i, j, k, board)
+					// tmp[i][j] += dHeatOffense2(i, j, k, board)
 				}
 
-				tmp[i][j] += hPotentialOffense(i, j, board)
-				tmp[i][j] += vPotentialOffense(	i, j, board)
-				tmp[i][j] += hPotentialDefense(i, j, board)
-				tmp[i][j] += vPotentialDefense(i, j, board)
+				tmp[i][j] += hPotential(i, j, model.StoneBlack, board)
+				tmp[i][j] += hPotential(i, j, model.StoneWhite, board)
+				tmp[i][j] += vPotential(i, j, model.StoneBlack, board)
+				tmp[i][j] += vPotential(i, j, model.StoneWhite, board)
+
+				// tmp[i][j] += dPotential(i, j, model.StoneBlack, board)
+				// tmp[i][j] += dPotential(i, j, model.StoneWhite, board)
+				// tmp[i][j] += dPotential2(i, j, model.StoneBlack, board)
+				// tmp[i][j] += dPotential2(i, j, model.StoneWhite, board)
+
 
 				tmp[i][j] += threeHorizontal(i, j, model.StoneWhite, board)
-				tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
 				tmp[i][j] += threeHorizontal(i, j, model.StoneBlack, board)
+				tmp[i][j] += threeVertical(i, j, model.StoneWhite, board)
 				tmp[i][j] += threeVertical(i, j, model.StoneBlack, board)
+				// tmp[i][j] += threeDiagonal(i, j, model.StoneWhite, board)
+				// tmp[i][j] += threeDiagonal(i, j, model.StoneBlack, board)
+				// tmp[i][j] += threeDiagonal2(i, j, model.StoneWhite, board)
+				// tmp[i][j] += threeDiagonal2(i, j, model.StoneBlack, board)
 
 				if tmp[i][j] > wMaxScore {
 					wMaxScore = tmp[i][j]
