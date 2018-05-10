@@ -77,10 +77,10 @@ const play_html = `<html>
 		if (playing && imgLoaded) {
 			imgLoaded = false;
 			img.src = "/img?quality=75&t=" + new Date().getTime();
-			setTimeout(refresh, 500);
+			setTimeout(refresh, 1000);
 		}
 		else
-			setTimeout(refresh, 500);
+			setTimeout(refresh, 1000);
 	}
 	
 	

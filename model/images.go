@@ -82,7 +82,6 @@ func decodeImg(data []byte, blockSize bool) *image.RGBA {
 func printBase64Imgs() {
 	var names []string
 
-	names = append(names, "wall.png")
 	names = append(names, "won.png")
 
 	// Generate output

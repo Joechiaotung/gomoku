@@ -88,19 +88,19 @@ func handleClick(c model.Click) {
 	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
 	// fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
 
-
-	model.PlayerTurn = true
+	
+	// model.PlayerTurn = true
 	if model.PlayerTurn == true {
 		model.Board[row][col] = model.StoneWhite
 
-		aiMove := NextMove()
-		fmt.Println(aiMove)
-		model.Board[aiMove.X][aiMove.Y] = model.StoneBlack
-	} else {
 		// aiMove := NextMove()
 		// fmt.Println(aiMove)
 		// model.Board[aiMove.X][aiMove.Y] = model.StoneBlack
-		// model.Board[row][col] = model.StoneBlack
+	} else {
+		aiMove := NextMove()
+		fmt.Println(aiMove)
+		// model.Board[aiMove.X][aiMove.Y] = model.StoneBlack
+		model.Board[row][col] = model.StoneBlack
 	}
 
 
