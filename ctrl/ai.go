@@ -703,23 +703,23 @@ func NextMove() (bestMove model.PiecePos) {
 			if board[i][j] == model.StoneEmpty {
 
 				for k := 1; k < 4; k++ {
-					// tmp[i][j] += hHeatDefense(i, j, k, board)					
-					// tmp[i][j] += vHeatDefense(i, j, k, board)					
+					tmp[i][j] += hHeatDefense(i, j, k, board)					
+					tmp[i][j] += vHeatDefense(i, j, k, board)					
 
 					// tmp[i][j] += dHeatDefense(i, j, k, board)
 					// tmp[i][j] += dHeatDefense2(i, j, k, board)
 
-					// tmp[i][j] += hHeatOffense(i, j, k, board)
-					// tmp[i][j] += vHeatOffense(i, j, k, board)
+					tmp[i][j] += hHeatOffense(i, j, k, board)
+					tmp[i][j] += vHeatOffense(i, j, k, board)
 
 					// tmp[i][j] += dHeatOffense(i, j, k, board)
 					// tmp[i][j] += dHeatOffense2(i, j, k, board)
 				}
 
-				// tmp[i][j] += hPotential(i, j, model.StoneBlack, board)
-				// tmp[i][j] += hPotential(i, j, model.StoneWhite, board)
-				// tmp[i][j] += vPotential(i, j, model.StoneBlack, board)
-				// tmp[i][j] += vPotential(i, j, model.StoneWhite, board)
+				tmp[i][j] += hPotential(i, j, model.StoneBlack, board)
+				tmp[i][j] += hPotential(i, j, model.StoneWhite, board)
+				tmp[i][j] += vPotential(i, j, model.StoneBlack, board)
+				tmp[i][j] += vPotential(i, j, model.StoneWhite, board)
 
 				// tmp[i][j] += dPotential(i, j, model.StoneBlack, board)
 				// tmp[i][j] += dPotential(i, j, model.StoneWhite, board)
