@@ -2,7 +2,6 @@ package ctrl
 
 import (
 	"github.com/skiptomyliu/gomoku/model"
-
 	// "math/rand"
 	"fmt"
 )
@@ -24,7 +23,7 @@ func defenseScore(count int, targetCount int)(int) {
 		} else if targetCount == 2 {
 			return 30
 		} else if targetCount == 3 {
-			return 50
+			return 40
 		} else if targetCount == 4 {
 			return 111111
 		}
@@ -32,22 +31,20 @@ func defenseScore(count int, targetCount int)(int) {
 	return 0
 }
 
-
 func offenseScore(count int, targetCount int)(int) {
 	if count >= targetCount {
 		if targetCount == 1 {
 			return 20
 		} else if targetCount == 2 {
-			return 50
-		} else if targetCount == 3 {
 			return 60
+		} else if targetCount == 3 {
+			return 80
 		} else if targetCount == 4 {
 			return 99999999
 		}
 	}
 	return 0
 }
-
 
 func hHeatDefense(i int, j int, targetCount int, board [][]model.Stone)(int) {
 
@@ -842,13 +839,11 @@ func NextMove() (bestMove model.PiecePos) {
 					tmp[i][j] += hHeatDefense(i, j, k, board)					
 					tmp[i][j] += vHeatDefense(i, j, k, board)					
 
-					// tmp[i][j] += dHeatDefense(i, j, k, board)
-					// tmp[i][j] += dHeatDefense2(i, j, k, board)
+					tmp[i][j] += dHeat(i, j, k, model.StoneWhite, board)
+					tmp[i][j] += dHeat2(i, j, k, model.StoneWhite, board)
 
 					tmp[i][j] += hHeatOffense(i, j, k, board)
 					tmp[i][j] += vHeatOffense(i, j, k, board)
-
-
 
 					tmp[i][j] += dHeat(i, j, k, model.StoneBlack, board)
 					tmp[i][j] += dHeat2(i, j, k, model.StoneBlack, board)
