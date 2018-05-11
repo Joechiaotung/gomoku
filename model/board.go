@@ -50,7 +50,7 @@ var ClickCh = make(chan Click, 10)
 func InitNew() {
 	fmt.Println("BOARD INIT NEW........");
 	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth, BoardHeight))
-    bg := color.RGBA{100, 90, 100, 255}
+    bg := color.RGBA{50, 50, 50, 255}
     // backfill entire surface with green
     draw.Draw(BoardImg, BoardImg.Bounds(), &image.Uniform{bg}, image.ZP, draw.Src)
 
@@ -81,7 +81,8 @@ func initBoardImg() {
 				x, y := ci*BlockSize, ri*BlockSize
 
 				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
-			    green := color.RGBA{0, 100, 0, 255}
+			    // green := color.RGBA{0, 100, 0, 255}
+			    green := color.RGBA{233, 169, 94, 255}
 
 			    // backfill entire surface with green
 			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
@@ -96,9 +97,9 @@ func DrawColRow(col int, row int) {
 			x, y := ci*BlockSize, ri*BlockSize
 			myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
 
-			pieceColor := color.RGBA{0, 100, 0, 255}
+			pieceColor := color.RGBA{233, 169, 94, 255}
 			if block == StoneBlack {
-			    pieceColor = color.RGBA{50, 10, 10, 255}
+			    pieceColor = color.RGBA{0, 0, 0, 255}
 			} else if block == StoneWhite {
 			    pieceColor = color.RGBA{255, 255, 255, 255}
 			} 
