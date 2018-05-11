@@ -50,6 +50,9 @@ var ClickCh = make(chan Click, 10)
 func InitNew() {
 	fmt.Println("BOARD INIT NEW........");
 	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth, BoardHeight))
+    bg := color.RGBA{50, 50, 50, 255}
+    // backfill entire surface with green
+    draw.Draw(BoardImg, BoardImg.Bounds(), &image.Uniform{bg}, image.ZP, draw.Src)
 
 	initBoard()
 	initBoardImg()
@@ -71,30 +74,19 @@ func initBoard() {
 func initBoardImg() {
 
 	fmt.Println("DRAWING........");
-	draw.Draw(BoardImg, BoardImg.Bounds(), EmptyImg, image.Pt(0, 0), draw.Over)
 
-	// Draw walls
-	// zeroPt := image.Point{}
 	for ri, row := range Board {
 		for ci, block := range row {
 			if block == StoneEmpty {
 				x, y := ci*BlockSize, ri*BlockSize
-				// rect := image.Rect(x, y, x+BlockSize, y+BlockSize)
-				// draw.Draw(BoardImg, rect, WallImg, zeroPt, draw.Over)
 
 				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
-			    green := color.RGBA{0, 100, 0, 255}
+			    // green := color.RGBA{0, 100, 0, 255}
+			    green := color.RGBA{233, 169, 94, 255}
 
 			    // backfill entire surface with green
 			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
-			} else {
-				x, y := ci*BlockSize, ri*BlockSize
-				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
-			    green := color.RGBA{200, 100, 200, 255}
-
-			    // backfill entire surface with green
-			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{green}, image.ZP, draw.Src)
-			}
+			} 
 		}
 	}
 }
@@ -105,7 +97,7 @@ func DrawColRow(col int, row int) {
 			x, y := ci*BlockSize, ri*BlockSize
 			myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
 
-			pieceColor := color.RGBA{0, 100, 0, 255}
+			pieceColor := color.RGBA{233, 169, 94, 255}
 			if block == StoneBlack {
 			    pieceColor = color.RGBA{0, 0, 0, 255}
 			} else if block == StoneWhite {

@@ -36,7 +36,7 @@ func init() {
 
 // InitNew initializes a new game.
 func InitNew() {
-	// Pos = image.Point{}
+
 }
 
 // playHtmlHandle serves the html page where the user can play.
