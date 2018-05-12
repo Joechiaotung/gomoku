@@ -10,7 +10,7 @@ const play_html = `<html>
 	#controls      {padding: 2px;}
 	#controls *    {margin-left: 3px; margin-right: 3px;}
 	#view          {position: relative; padding: 1px;}
-	#img           {background: #000; border: 1px solid black;}
+	#img           {background: #fff; border: 1px solid black;}
 	#errMsg        {visibility: hidden; position: absolute; top: 10px; right: 0px; width: 100%; color: #ff3030; font-weight: bold;}
 	#footer        {margin-top: 5px; font-size: 90%; font-style: italic;}
 </style>
@@ -44,7 +44,7 @@ const play_html = `<html>
 </div>
 
 <div id="footer">
-	Footer goes here
+	<a href="https://github.com/skiptomyliu/gomoku">https://github.com/skiptomyliu/gomoku</a>
 </div>
 
 <script>
@@ -77,10 +77,10 @@ const play_html = `<html>
 		if (playing && imgLoaded) {
 			imgLoaded = false;
 			img.src = "/img?quality=75&t=" + new Date().getTime();
-			setTimeout(refresh, 5);
+			setTimeout(refresh, 1000);
 		}
 		else
-			setTimeout(refresh, 5);
+			setTimeout(refresh, 1000);
 	}
 	
 	

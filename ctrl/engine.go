@@ -83,12 +83,10 @@ func simulate() {
 
 // handleClick handles a mouse click
 func handleClick(c model.Click) {
-	// fmt.Println("Do something")
 
 	col, row := c.X/model.BlockSize, c.Y/model.BlockSize
-	// fmt.Printf("%v,%v -- %v,%v", c.X, c.Y, col, row)
 
-
+	// AI
 	model.PlayerTurn = true
 	if model.PlayerTurn == true {
 		model.Board[row][col] = model.StoneWhite

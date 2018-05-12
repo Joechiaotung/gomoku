@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
-	"image/color"
 	"image/draw"
 	"image/png"
 	"io/ioutil"
@@ -21,7 +20,6 @@ var BoardImg *image.RGBA
 var WallImg *image.RGBA
 
 // Image of the empty block
-var EmptyImg = image.NewUniform(color.RGBA{A: 0xff})
 
 // Image of the empty block
 var TargetImg *image.RGBA
@@ -33,8 +31,8 @@ var ExitImg *image.RGBA
 var WonImg *image.RGBA
 
 func init() {
-	WallImg = loadImg("wall.png", true)
-	WonImg = loadImg("won.png", false)
+	// WallImg = loadImg("wall.png", true)
+	// WonImg = loadImg("won.png", false)
 }
 
 // loadImg loads a PNG image from the specified file, and converts it to image.RGBA and makes sure image has zero Min point.
@@ -82,7 +80,6 @@ func decodeImg(data []byte, blockSize bool) *image.RGBA {
 func printBase64Imgs() {
 	var names []string
 
-	names = append(names, "wall.png")
 	names = append(names, "won.png")
 
 	// Generate output
