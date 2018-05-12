@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
-	// "image/color"
 	"image/draw"
 	"image/png"
 	"io/ioutil"
@@ -32,8 +31,8 @@ var ExitImg *image.RGBA
 var WonImg *image.RGBA
 
 func init() {
-	WallImg = loadImg("wall.png", true)
-	WonImg = loadImg("won.png", false)
+	// WallImg = loadImg("wall.png", true)
+	// WonImg = loadImg("won.png", false)
 }
 
 // loadImg loads a PNG image from the specified file, and converts it to image.RGBA and makes sure image has zero Min point.

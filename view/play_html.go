@@ -44,7 +44,7 @@ const play_html = `<html>
 </div>
 
 <div id="footer">
-	Footer goes here
+	<a href="https://github.com/skiptomyliu/gomoku">https://github.com/skiptomyliu/gomoku</a>
 </div>
 
 <script>
