@@ -2,7 +2,6 @@ package ctrl
 
 import (
 	"github.com/skiptomyliu/gomoku/model"
-	// "math/rand"
 	"fmt"
 )
 

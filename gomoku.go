@@ -20,8 +20,8 @@ func processFlags() error {
 	flag.IntVar(&port, "port", 1234, "Port to start the UI web server on; valid range: 0..65535")
 	// flag.BoolVar(&autoOpen, "autoOpen", true, "Auto-opens the UI web page in the default browser")
 
-	flag.IntVar(&model.Rows, "rows", 20, "the number of rows in the Labyrinth; must be odd; valid range: 9..99")
-	flag.IntVar(&model.Cols, "cols", 20, "the number of columns in the Labyrinth; must be odd; valid range: 9..99")
+	flag.IntVar(&model.Rows, "rows", 15, "the number of rows on Board; must be odd; valid range: 9..99")
+	flag.IntVar(&model.Cols, "cols", 15, "the number of columns on Board; must be odd; valid range: 9..99")
 
 
 	// View package flags

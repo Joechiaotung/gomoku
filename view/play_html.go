@@ -96,8 +96,8 @@ const play_html = `<html>
 	    	x = e.clientX;
 	    	y = e.clientY;
 	    	for (var el = img; el; el = el.offsetParent) {
-	    		x -= el.offsetLeft - el.scrollLeft + el.clientLeft;
-        		y -= el.offsetTop - el.scrollTop + el.clientTop;
+	    		x -= el.offsetLeft - el.scrollLeft + el.clientLeft + 7;
+        		y -= el.offsetTop - el.scrollTop + el.clientTop + 7;
 	    	}
     	}
     	
