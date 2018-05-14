@@ -18,11 +18,7 @@ var Board [][]Stone
 var PlayerTurn bool = true
 
 type PiecePos struct {
-	// The position in the board in pixel coordinates
-	// Pos struct {
-		X, Y int
-	// }
-	// Imgs []*image.RGBA
+	X, Y int
 }
 
 // Tells if we won

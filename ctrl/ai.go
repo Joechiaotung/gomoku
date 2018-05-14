@@ -216,16 +216,16 @@ func vPotential(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 			if k-m == 0 {
 				continue
 			}
-			if (i < len(board)-k-m) && (i+k-m > 0) {
-				if (board[i+k-m][j] == targetStone) {
-					count += 1
-				}
 
-				if (board[i+k-m][j] == notTargetStone) {
-					count = 0
-					break
-				}
+			if check(i+k-m, j, board, targetStone) {
+				count += 1
 			}
+
+			if check(i+k-m, j, board, notTargetStone) {
+				count = 0
+				break
+			}
+		
 		}
 
 		if count > maxCount {
@@ -256,16 +256,16 @@ func hPotential(i int, j int, piece model.Stone, board [][]model.Stone)(int) {
 				continue
 			}
 
-			if (j < len(board)-k-m) && (j+k-m > 0) {
-				if (board[i][j+k-m] == targetStone) {
-					count += 1
-				}
-
-				if (board[i][j+k-m] == notTargetStone) {
-					count = 0
-					break
-				}
+			if check(i, j+k-m, board, targetStone) {
+				count += 1
 			}
+
+			
+			if check(i, j+k-m, board, notTargetStone) {
+				count = 0
+				break
+			}
+			
 		}
 		if count > maxCount {
 			maxCount = count
@@ -885,7 +885,6 @@ func NextMove() (bestMove model.PiecePos) {
 	} 
 
 	// fmt.Println(tmp)
-	// fmt.Println("BY MAX COUNT %v", bestMove)
 	fmt.Printf("BY MAX SCORE %v - %v\n", bestMoveScore, maxScore)
 	fmt.Printf("highest: %v - %v\n", bestMove, maxCount)
 	if bestMove.X == -1 {
