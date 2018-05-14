@@ -4,6 +4,10 @@
 
 Basic Gomoku AI written in Golang.
 
+to run:
+
+```go run gomoku.go```
+
 ### Components:
 
 Go webserver: TODO

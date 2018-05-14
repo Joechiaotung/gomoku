@@ -18,11 +18,7 @@ var Board [][]Stone
 var PlayerTurn bool = true
 
 type PiecePos struct {
-	// The position in the board in pixel coordinates
-	// Pos struct {
-		X, Y int
-	// }
-	// Imgs []*image.RGBA
+	X, Y int
 }
 
 // Tells if we won
@@ -49,9 +45,10 @@ var ClickCh = make(chan Click, 10)
 // InitNew initializes a new game.
 func InitNew() {
 	fmt.Println("BOARD INIT NEW........");
-	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth, BoardHeight))
+
+	// backfill entire surface with grey
+	BoardImg = image.NewRGBA(image.Rect(0, 0, BoardWidth+100, BoardHeight+100))
     bg := color.RGBA{50, 50, 50, 255}
-    // backfill entire surface with beige
     draw.Draw(BoardImg, BoardImg.Bounds(), &image.Uniform{bg}, image.ZP, draw.Src)
 
 	initBoard()
@@ -103,13 +100,13 @@ func (c *circle) Color(circleColor color.Color) color.Color {
 
 // initBoardImg initializes and draws the image of the Labyrinth.
 func initBoardImg() {
+
+	emptycolor := color.RGBA{233, 169, 94, 255}
 	for ri, row := range Board {
 		for ci, block := range row {
-			if block == StoneEmpty {
-				x, y := ci*BlockSize+BlockSize/2, ri*BlockSize+BlockSize/2
-
+			if (block == StoneEmpty) && ci != Cols-1 && ri != Rows-1 {
+				x, y := ci*BlockSize+BlockSize/2+BlockSize, ri*BlockSize+BlockSize/2+BlockSize
 				myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-1, y+BlockSize-1))
-			    emptycolor := color.RGBA{233, 169, 94, 255}
 
 			    // backfill entire surface with beige
 			    draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{emptycolor}, image.ZP, draw.Src)
@@ -119,29 +116,24 @@ func initBoardImg() {
 }
 
 func DrawColRow(col int, row int) {
+	blackColor := color.RGBA{0, 0, 0, 255}
+	whiteColor := color.RGBA{255, 255, 255, 255}
 	for ri, row := range Board {
 		for ci, block := range row {
-			x, y := ci*BlockSize, ri*BlockSize
+			x, y := ci*BlockSize+BlockSize, ri*BlockSize+BlockSize
 			myimage := image.NewRGBA(image.Rect(x, y, x+BlockSize-3, y+BlockSize-3))
-			// pieceColor := color.RGBA{233, 169, 94, 255}
-			// draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{pieceColor}, image.ZP, draw.Src)
 
 			pieceSize := BlockSize/2 - 2
 			if block == StoneBlack {
-			    pieceColor := color.RGBA{0, 0, 0, 255}
-			    cr := &circle{image.Point{pieceSize, pieceSize}, pieceSize, pieceColor}
+			    cr := &circle{image.Point{pieceSize, pieceSize}, pieceSize, blackColor}
 			    draw.DrawMask(BoardImg, myimage.Bounds(), cr, image.ZP, cr, image.ZP, draw.Over)
 			} else if block == StoneWhite {
-			    pieceColor := color.RGBA{255, 255, 255, 255}
-			    cr := &circle{image.Point{pieceSize, pieceSize}, pieceSize, pieceColor}
-				// draw.Draw(BoardImg, BoardImg.Bounds(), cr, image.ZP, draw.Over)
+			    
+			    cr := &circle{image.Point{pieceSize, pieceSize}, pieceSize, whiteColor}
 				draw.DrawMask(BoardImg, myimage.Bounds(), cr, image.ZP, cr, image.ZP, draw.Over)
 			} 
 
 			// draw.Draw(BoardImg, myimage.Bounds(), &image.Uniform{pieceColor}, image.ZP, draw.Src)
-			
-
-
 		}
 	}
 }

@@ -2,7 +2,7 @@ package model
 
 const (
 	// BlockSize is the size of the board unit in pixels.
-	BlockSize = 40
+	BlockSize = 30
 )
 
 var (
