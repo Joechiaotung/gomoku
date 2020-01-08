@@ -7,17 +7,17 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
+	"os"
 	"runtime"
 	"./ctrl"
 	"./model"
 	"./view"
 )
 
-var port int
+var port string
 
 func processFlags() error {
 	// General flags
-	flag.IntVar(&port, "port", 1234, "Port to start the UI web server on; valid range: 0..65535")
 	// flag.BoolVar(&autoOpen, "autoOpen", true, "Auto-opens the UI web page in the default browser")
 
 	flag.IntVar(&model.Rows, "rows", 21, "the number of rows on Board; must be odd; valid range: 9..99")
@@ -30,9 +30,6 @@ func processFlags() error {
 
 	flag.Parse()
 
-	if port < 0 || port > 65535 {
-		return fmt.Errorf("port %d is outside of valid range", port)
-	}
 
 	model.BoardWidth = model.Cols * model.BlockSize
 	model.BoardHeight = model.Rows * model.BlockSize
@@ -59,7 +56,7 @@ func main() {
 
 	ctrl.StartEngine()
 
-	port := 3000
+	port := "3000"
 	fmt.Printf("Starting GoLab webserver on port %d...\n", port)
 	url := fmt.Sprintf("http://localhost:%d/", port)
 
@@ -69,7 +66,11 @@ func main() {
 		fmt.Printf("Open %s in your browser.\n", url)
 	}
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
+	if v := os.Getenv("PORT"); len(v) > 0 {
+		port = v
+	}
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
 
 
