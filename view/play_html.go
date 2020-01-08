@@ -30,9 +30,6 @@ const play_html = `<html>
 	
 	<button id="newGame" onclick="newGame()">New Game</button>
 	
-	<a href="/help" target="_blank">Help</a>
-	
-	<a href="https://github.com/skiptomyliu/gomoku" target="_blank" title="Visit Home Page">github</a>
 </div>
 
 <div id="view">
@@ -43,9 +40,6 @@ const play_html = `<html>
 	<div id="errMsg">Connection Error or Application Closed!</div>
 </div>
 
-<div id="footer">
-	<a href="https://github.com/skiptomyliu/gomoku">https://github.com/skiptomyliu/gomoku</a>
-</div>
 
 <script>
 	var runId = {{.RunId}};

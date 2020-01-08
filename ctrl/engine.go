@@ -1,6 +1,9 @@
 package ctrl
 
 import (
+	"../model"
+	"../view"
+
 	// "image"
 	// "image/draw"
 	// "math"
@@ -87,7 +90,7 @@ func handleClick(c model.Click) {
 	// AI
 	model.PlayerTurn = true
 	if model.PlayerTurn == true {
-		if model.Board[row][col] != model.StoneWhite && model.Board[row][col] != model.StoneBlack {
+		if model.Board[row][col] != model.StoneWhite && model.Board[row][col] != model.StoneBlack && !model.Won {
 			model.Board[row][col] = model.StoneWhite
 
 			aiMove := NextMove()
@@ -151,7 +154,7 @@ func handleWinning(x int, y int) int {
 			break
 		}
 	}
-	fmt.Println("row")
+	//fmt.Println("row")
 	for b := y - 4; b <= y+4; b++ { //判斷豎
 		if b < 0 {
 			continue
@@ -165,7 +168,7 @@ func handleWinning(x int, y int) int {
 			break
 		}
 	}
-	fmt.Println("column")
+	//fmt.Println("column")
 	for a, b := x-4, y-4; a <= x+4; a, b = a+1, b+1 { //判斷右斜
 		c := a + 4
 		d := b + 4
@@ -187,7 +190,7 @@ func handleWinning(x int, y int) int {
 			break
 		}
 	}
-	fmt.Println("+x +y")
+	//fmt.Println("+x +y")
 	for a, b := x-4, y+4; a <= x+4; a, b = a+1, b-1 { //判斷左斜
 		//fmt.Println(a, b)
 		c := a + 4

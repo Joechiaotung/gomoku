@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"../model"
 )
 
 var Params = struct {
@@ -83,12 +85,13 @@ func clickedHandle(w http.ResponseWriter, r *http.Request) {
 
 	// x, y are in the coordinate system of the client's view.
 	// Translate them to the Labyrinth's coordinate system:
-	select {
+	if model.Won == false {
+		select {
 		case model.ClickCh <- model.Click{Pos.X + x, Pos.Y + y, btn}:
 		default:
+		}
 	}
 }
-
 
 // // newGameHandle signals to start a newgame.
 func newGameHandle(w http.ResponseWriter, r *http.Request) {

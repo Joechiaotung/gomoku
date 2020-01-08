@@ -1,6 +1,7 @@
 package ctrl
 
 import (
+	"../model"
 	"fmt"
 )
 
