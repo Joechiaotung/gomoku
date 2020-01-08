@@ -9,9 +9,9 @@ import (
 	"os/exec"
 	"os"
 	"runtime"
-	"ctrl"
-	"model"
-	"view"
+	"github.com/Joechiaotung/gomoku/ctrl"
+	"github.com/Joechiaotung/gomoku/model"
+	"github.com/Joechiaotung/gomoku/view"
 )
 
 var port string
