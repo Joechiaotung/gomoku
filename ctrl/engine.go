@@ -20,6 +20,7 @@ func initNew() {
 	fmt.Println("Trying to init new")
 	model.InitNew()
 	view.InitNew()
+	model.Won = false
 }
 
 // StartEngine starts the game engine in a new goroutine and returns as soon as possible.
@@ -138,34 +139,78 @@ func handleWinning(x int, y int) int {
 	*/
 	for a := x - 4; a <= x+4; a++ {
 		//判斷橫
+		if a < 0 {
+			continue
+		}
+		if (a + 4) == model.Rows {
+			break
+		}
 		if model.Board[a][y] == model.Board[x][y] && model.Board[a+1][y] == model.Board[x][y] && model.Board[a+2][y] == model.Board[x][y] && model.Board[a+3][y] == model.Board[x][y] && model.Board[a+4][y] == model.Board[x][y] {
 			//fmt.Println("row")
 			flag = 1
 			break
 		}
 	}
+	fmt.Println("row")
 	for b := y - 4; b <= y+4; b++ { //判斷豎
+		if b < 0 {
+			continue
+		}
+		if (b + 4) == model.Cols {
+			break
+		}
 		if (model.Board[x][b] == model.Board[x][y]) && (model.Board[x][b+1] == model.Board[x][y]) && (model.Board[x][b+2] == model.Board[x][y]) && (model.Board[x][b+3] == model.Board[x][y]) && (model.Board[x][b+4] == model.Board[x][y]) {
 			//fmt.Println("column")
 			flag = 1
 			break
 		}
 	}
+	fmt.Println("column")
 	for a, b := x-4, y-4; a <= x+4; a, b = a+1, b+1 { //判斷右斜
+		c := a + 4
+		d := b + 4
+		if a < 0 {
+			continue
+		}
+		if c >= model.Rows {
+			break
+		}
+		if b < 0 {
+			continue
+		}
+		if d >= model.Cols {
+			break
+		}
 		if model.Board[a][b] == model.Board[x][y] && model.Board[a+1][b+1] == model.Board[x][y] && model.Board[a+2][b+2] == model.Board[x][y] && model.Board[a+3][b+3] == model.Board[x][y] && model.Board[a+4][b+4] == model.Board[x][y] {
 			//fmt.Println("+x +y")
 			flag = 1
 			break
 		}
 	}
+	fmt.Println("+x +y")
 	for a, b := x-4, y+4; a <= x+4; a, b = a+1, b-1 { //判斷左斜
 		//fmt.Println(a, b)
+		c := a + 4
+		d := b - 4
+		if a < 0 {
+			continue
+		}
+		if c >= model.Rows {
+			break
+		}
+		if d < 0 {
+			break
+		}
+		if b >= model.Cols {
+			continue
+		}
 		if model.Board[a][b] == model.Board[x][y] && model.Board[a+1][b-1] == model.Board[x][y] && model.Board[a+2][b-2] == model.Board[x][y] && model.Board[a+3][b-3] == model.Board[x][y] && model.Board[a+4][b-4] == model.Board[x][y] {
 			//fmt.Println("+x -y")
 			flag = 1
 			break
 		}
 	}
+	fmt.Println("+x -y")
 	if flag == 1 {
 
 		return 1
