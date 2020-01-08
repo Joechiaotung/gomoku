@@ -1,8 +1,8 @@
 package ctrl
 
 import (
-	"../model"
-	"../view"
+	"model"
+	"view"
 	// "image"
 	// "image/draw"
 	// "math"

@@ -2,7 +2,7 @@ package view
 
 import (
 	"fmt"
-	"../model"
+	"model"
 	"html/template"
 	"image"
 	"image/jpeg"

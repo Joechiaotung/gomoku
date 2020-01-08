@@ -9,9 +9,9 @@ import (
 	"os/exec"
 	"os"
 	"runtime"
-	"./ctrl"
-	"./model"
-	"./view"
+	"ctrl"
+	"model"
+	"view"
 )
 
 var port string
