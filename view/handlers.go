@@ -25,7 +25,7 @@ var Pos image.Point
 
 // init registers the http handlers.
 func init() {
-	//http.HandleFunc("/", playHtmlHandle)
+	http.HandleFunc("/", playHtmlHandle)
 	http.HandleFunc("/runid", runIdHandle)
 	http.HandleFunc("/img", imgHandle)
 	http.HandleFunc("/clicked", clickedHandle)
