@@ -2,7 +2,6 @@ package view
 
 import (
 	"fmt"
-	"github.com/Joechiaotung/gomoku/model"
 	"html/template"
 	"image"
 	"image/jpeg"

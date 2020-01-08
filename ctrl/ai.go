@@ -1,7 +1,6 @@
 package ctrl
 
 import (
-	"github.com/Joechiaotung/gomoku/model"
 	"fmt"
 )
 

@@ -1,8 +1,6 @@
 package ctrl
 
 import (
-	"github.com/Joechiaotung/gomoku/model"
-	"github.com/Joechiaotung/gomoku/view"
 	// "image"
 	// "image/draw"
 	// "math"
